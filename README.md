@@ -1,3 +1,3 @@
 # Java
 project-manager-hotel
-test 1
+test 2
