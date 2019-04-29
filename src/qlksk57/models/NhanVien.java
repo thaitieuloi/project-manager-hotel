@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package qlksk57;
+package qlksk57.models;
 
 import java.util.Date;
 
@@ -168,8 +168,9 @@ public class NhanVien {
 
 	@Override
     public String toString() {
-        return "NhanVien{" + "MANV=" + maNV + ", TENNV=" + tenNV + ", CHUCVU=" + chucVu + ", LUONGNV=" + luongNV + ", NGAYSINH=" + ngaySinh + ", GIOITINH=" + gioiTinh + ", CHUTHICH=" + chuThich + '}';
-    }
+//        return "NhanVien{" + "MANV=" + maNV + ", TENNV=" + tenNV + ", CHUCVU=" + chucVu + ", LUONGNV=" + luongNV + ", NGAYSINH=" + ngaySinh + ", GIOITINH=" + gioiTinh + ", CHUTHICH=" + chuThich + '}';
+		return tenNV;
+	}
     
     
     

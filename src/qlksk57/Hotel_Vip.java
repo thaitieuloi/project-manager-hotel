@@ -7,6 +7,8 @@ package qlksk57;
 
 import static qlksk57.MyConnection.getConnection;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -29,6 +31,12 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+
+import qlksk57.models.DichVu;
+import qlksk57.models.HoaDon;
+import qlksk57.models.KhachHang;
+import qlksk57.models.NhanVien;
+import qlksk57.models.Phong;
 
 /**
  *
@@ -2099,4 +2107,17 @@ public class Hotel_Vip extends JFrame {
 	private JButton xoa3;
 	private JButton xoa4;
 	// End of variables declaration//GEN-END:variables
+	
+	private void setLocationDefault(int w, int h) {
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+
+		System.out.println(dim.width + " " + dim.height);
+		System.out.println(w + " " + h);
+
+		int x = (dim.width - w) / 2;
+		int y = (dim.height - h) / 2;
+
+		// Move the window
+		 this.setLocation(x, y);
+	}
 }

@@ -7,15 +7,19 @@ package qlksk57.Form;
 
 import static qlksk57.MyConnection.getConnection;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,14 +27,18 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.LayoutStyle;
+import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-import qlksk57.KhachHang;
+import qlksk57.control.KhachHangControl;
+import qlksk57.control.PhongControl;
+import qlksk57.models.DichVu;
+import qlksk57.models.KhachHang;
+import qlksk57.models.Phong;
 
 /**
  *
@@ -39,47 +47,31 @@ import qlksk57.KhachHang;
 @SuppressWarnings("serial")
 public class khachhangform extends JFrame {
 
+	KhachHangControl khachHangControl = new KhachHangControl();
+	PhongControl phongControl = new PhongControl();
+
+	ArrayList<Phong> dsphong = null;
+
 	/**
 	 * Creates new form khachhangform
 	 */
 	public khachhangform() {
+		setResizable(false);
 		initComponents();
+
 		getConnection();
+		loadComboxbo();
 		hienThiDanhSachKhachHang();
+		setLocationDefault(1100, 600);
 	}
 
 	Connection con = null;
 	Statement st = null;
 
-	public ArrayList<KhachHang> layDanhSachKhachHang() {
-		ArrayList<KhachHang> dskh = new ArrayList<KhachHang>();
-		Connection con = getConnection();
-		try {
-			st = (Statement) con.createStatement();
-			String sql = "SELECT * FROM khachhang";
-			// ThÆ°cj thi cÃ¢u lá»‡nh truy váº¥n
-			ResultSet rs = st.executeQuery(sql);
-
-			KhachHang kh;
-			while (rs.next()) {
-				kh = new KhachHang(rs.getString("MAKH"), rs.getString("TENKH"), rs.getString("CMND"),
-						rs.getString("QUOCTICH"), rs.getString("GIOITINH"), rs.getInt("TUOI"), rs.getString("SDT"),
-						rs.getString("MAPHONG"));
-
-				// ThÃªm vÃ o danh sÃ¡ch
-				dskh.add(kh);
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-
-		}
-		return dskh;
-	}
-
 	public void hienThiDanhSachKhachHang() {
 		String colTieuDe1[] = new String[] { "Mã khách hàng", "Tên khách hàng", "Chứng minh nhân dân", "Quốc tịch",
 				"Giới tính", "Tuổi", "Số điện thoại", "Mã phòng" };
-		ArrayList<KhachHang> dskh = layDanhSachKhachHang();
+		ArrayList<KhachHang> dskh = khachHangControl.layDanhSachKhachHang();
 
 		DefaultTableModel model = new DefaultTableModel(colTieuDe1, 0);
 
@@ -131,10 +123,8 @@ public class khachhangform extends JFrame {
 		jTextFieldTENKH = new JTextField();
 		jTextFieldCMND = new JTextField();
 		jTextFieldQUOCTICH = new JTextField();
-		jTextFieldGIOITINHKH = new JTextField();
 		jTextFieldTUOI = new JTextField();
 		jTextFieldSDT = new JTextField();
-		jTextFieldMAPHONGKH = new JTextField();
 		them1 = new JButton();
 		sua1 = new JButton();
 		xoa1 = new JButton();
@@ -179,12 +169,6 @@ public class khachhangform extends JFrame {
 			}
 		});
 
-		jTextFieldMAPHONGKH.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				jTextFieldMAPHONGKHActionPerformed(evt);
-			}
-		});
-
 		them1.setIcon(new ImageIcon(getClass().getResource("/qlksk57/Form/hinh/THEM.png"))); // NOI18N
 		them1.setText("Thêm");
 		them1.addActionListener(new java.awt.event.ActionListener() {
@@ -225,121 +209,102 @@ public class khachhangform extends JFrame {
 			}
 		});
 
+		comboBoxMAPHONGKH = new JComboBox();
+		String gender[] = { "NAM", "NỮ" };
+
+		comboBoxGIOITINH = new JComboBox(gender);
+
 		GroupLayout jPanel12Layout = new GroupLayout(jPanel12);
+		jPanel12Layout.setHorizontalGroup(jPanel12Layout.createParallelGroup(Alignment.LEADING)
+				.addGroup(jPanel12Layout.createSequentialGroup().addGap(22)
+						.addGroup(jPanel12Layout.createParallelGroup(Alignment.LEADING)
+								.addGroup(jPanel12Layout.createSequentialGroup()
+										.addGroup(jPanel12Layout.createParallelGroup(Alignment.LEADING, false)
+												.addComponent(xoa1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
+														Short.MAX_VALUE)
+												.addComponent(them1))
+										.addGap(18)
+										.addGroup(jPanel12Layout.createParallelGroup(Alignment.LEADING, false)
+												.addComponent(thoat1, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE,
+														GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+												.addComponent(sua1, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE,
+														GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+										.addGap(22).addComponent(jButtonclear2).addGap(17))
+								.addGroup(jPanel12Layout.createSequentialGroup().addGroup(jPanel12Layout
+										.createParallelGroup(Alignment.LEADING).addComponent(jLabel10)
+										.addComponent(jLabel11).addComponent(jLabel12).addComponent(jLabel13)
+										.addComponent(jLabel14).addComponent(jLabel15).addComponent(jLabel16)
+										.addComponent(jLabel17)).addGap(18)
+										.addGroup(jPanel12Layout.createParallelGroup(Alignment.LEADING)
+												.addComponent(comboBoxGIOITINH, 0, 154, Short.MAX_VALUE)
+												.addComponent(comboBoxMAPHONGKH, 0, 154, Short.MAX_VALUE)
+												.addComponent(jTextFieldSDT, GroupLayout.DEFAULT_SIZE, 154,
+														Short.MAX_VALUE)
+												.addComponent(jTextFieldTUOI, GroupLayout.DEFAULT_SIZE, 154,
+														Short.MAX_VALUE)
+												.addComponent(jTextFieldMAKH, GroupLayout.DEFAULT_SIZE, 154,
+														Short.MAX_VALUE)
+												.addComponent(jTextFieldTENKH, GroupLayout.DEFAULT_SIZE, 154,
+														Short.MAX_VALUE)
+												.addComponent(jTextFieldCMND, GroupLayout.DEFAULT_SIZE, 154,
+														Short.MAX_VALUE)
+												.addComponent(jTextFieldQUOCTICH, GroupLayout.DEFAULT_SIZE, 154,
+														Short.MAX_VALUE))
+										.addGap(36)))));
+		jPanel12Layout.setVerticalGroup(jPanel12Layout.createParallelGroup(Alignment.LEADING).addGroup(jPanel12Layout
+				.createSequentialGroup().addContainerGap()
+				.addGroup(jPanel12Layout
+						.createParallelGroup(Alignment.BASELINE).addComponent(jLabel10).addComponent(jTextFieldMAKH,
+								GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+				.addPreferredGap(ComponentPlacement.UNRELATED)
+				.addGroup(jPanel12Layout
+						.createParallelGroup(Alignment.BASELINE).addComponent(jLabel11).addComponent(jTextFieldTENKH,
+								GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+				.addPreferredGap(ComponentPlacement.UNRELATED)
+				.addGroup(jPanel12Layout
+						.createParallelGroup(Alignment.BASELINE).addComponent(jLabel12).addComponent(jTextFieldCMND,
+								GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+				.addPreferredGap(ComponentPlacement.UNRELATED)
+				.addGroup(jPanel12Layout
+						.createParallelGroup(Alignment.BASELINE).addComponent(jLabel13).addComponent(jTextFieldQUOCTICH,
+								GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+				.addPreferredGap(ComponentPlacement.UNRELATED)
+				.addGroup(jPanel12Layout
+						.createParallelGroup(Alignment.BASELINE).addComponent(jLabel14).addComponent(comboBoxGIOITINH,
+								GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+				.addPreferredGap(ComponentPlacement.UNRELATED)
+				.addGroup(jPanel12Layout
+						.createParallelGroup(Alignment.BASELINE).addComponent(jLabel15).addComponent(jTextFieldTUOI,
+								GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+				.addPreferredGap(ComponentPlacement.UNRELATED)
+				.addGroup(jPanel12Layout
+						.createParallelGroup(Alignment.BASELINE).addComponent(jLabel16).addComponent(jTextFieldSDT,
+								GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+				.addPreferredGap(ComponentPlacement.UNRELATED)
+				.addGroup(jPanel12Layout
+						.createParallelGroup(Alignment.BASELINE).addComponent(jLabel17).addComponent(comboBoxMAPHONGKH,
+								GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+				.addGap(18)
+				.addGroup(jPanel12Layout.createParallelGroup(Alignment.BASELINE).addComponent(them1)
+						.addComponent(jButtonclear2).addComponent(sua1))
+				.addPreferredGap(ComponentPlacement.UNRELATED)
+				.addGroup(
+						jPanel12Layout.createParallelGroup(Alignment.BASELINE).addComponent(xoa1).addComponent(thoat1))
+				.addGap(24)));
 		jPanel12.setLayout(jPanel12Layout);
-		jPanel12Layout
-				.setHorizontalGroup(
-						jPanel12Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-								.addGroup(
-										jPanel12Layout
-												.createSequentialGroup().addGap(22, 22, 22).addGroup(jPanel12Layout
-														.createParallelGroup(GroupLayout.Alignment.LEADING)
-														.addGroup(jPanel12Layout.createSequentialGroup().addGroup(
-																jPanel12Layout
-																		.createParallelGroup(
-																				GroupLayout.Alignment.LEADING, false)
-																		.addComponent(them1, GroupLayout.DEFAULT_SIZE,
-																				GroupLayout.DEFAULT_SIZE,
-																				Short.MAX_VALUE)
-																		.addComponent(xoa1, GroupLayout.DEFAULT_SIZE,
-																				GroupLayout.DEFAULT_SIZE,
-																				Short.MAX_VALUE))
-																.addGap(32, 32, 32)
-																.addGroup(jPanel12Layout.createParallelGroup(
-																		GroupLayout.Alignment.LEADING).addComponent(
-																				thoat1)
-																		.addGroup(jPanel12Layout.createSequentialGroup()
-																				.addComponent(sua1).addGap(18, 18, 18)
-																				.addComponent(jButtonclear2))))
-														.addGroup(jPanel12Layout
-																.createSequentialGroup().addGroup(jPanel12Layout
-																		.createParallelGroup(
-																				GroupLayout.Alignment.LEADING)
-																		.addComponent(jLabel10).addComponent(jLabel11)
-																		.addComponent(jLabel12).addComponent(jLabel13)
-																		.addComponent(jLabel14).addComponent(jLabel15)
-																		.addComponent(jLabel16).addComponent(jLabel17))
-																.addGap(18, 18, 18)
-																.addGroup(jPanel12Layout
-																		.createParallelGroup(
-																				GroupLayout.Alignment.LEADING)
-																		.addComponent(jTextFieldQUOCTICH,
-																				GroupLayout.PREFERRED_SIZE, 84,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addComponent(jTextFieldCMND,
-																				GroupLayout.PREFERRED_SIZE, 84,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addComponent(jTextFieldTENKH,
-																				GroupLayout.PREFERRED_SIZE, 84,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addComponent(jTextFieldMAKH,
-																				GroupLayout.PREFERRED_SIZE, 84,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addComponent(jTextFieldGIOITINHKH,
-																				GroupLayout.PREFERRED_SIZE, 84,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addComponent(jTextFieldTUOI,
-																				GroupLayout.PREFERRED_SIZE, 84,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addComponent(jTextFieldSDT,
-																				GroupLayout.PREFERRED_SIZE, 84,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addComponent(jTextFieldMAPHONGKH,
-																				GroupLayout.PREFERRED_SIZE, 84,
-																				GroupLayout.PREFERRED_SIZE))))
-												.addContainerGap(36, Short.MAX_VALUE)));
-		jPanel12Layout.setVerticalGroup(jPanel12Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(jPanel12Layout.createSequentialGroup().addContainerGap()
-						.addGroup(jPanel12Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-								.addComponent(jLabel10).addComponent(jTextFieldMAKH, GroupLayout.PREFERRED_SIZE,
-										GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-						.addGroup(jPanel12Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-								.addComponent(jLabel11).addComponent(jTextFieldTENKH, GroupLayout.PREFERRED_SIZE,
-										GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-						.addGroup(jPanel12Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-								.addComponent(jLabel12).addComponent(jTextFieldCMND, GroupLayout.PREFERRED_SIZE,
-										GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-						.addGroup(jPanel12Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-								.addComponent(jLabel13).addComponent(jTextFieldQUOCTICH, GroupLayout.PREFERRED_SIZE,
-										GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-						.addGroup(jPanel12Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-								.addComponent(jLabel14).addComponent(jTextFieldGIOITINHKH, GroupLayout.PREFERRED_SIZE,
-										GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-						.addGroup(jPanel12Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-								.addComponent(jLabel15).addComponent(jTextFieldTUOI, GroupLayout.PREFERRED_SIZE,
-										GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-						.addGroup(jPanel12Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-								.addComponent(jLabel16).addComponent(jTextFieldSDT, GroupLayout.PREFERRED_SIZE,
-										GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-						.addGroup(jPanel12Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-								.addComponent(jLabel17).addComponent(jTextFieldMAPHONGKH, GroupLayout.PREFERRED_SIZE,
-										GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addGap(41, 41, 41)
-						.addGroup(jPanel12Layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(them1)
-								.addComponent(sua1).addComponent(jButtonclear2))
-						.addGap(28, 28, 28).addGroup(jPanel12Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-								.addComponent(xoa1).addComponent(thoat1))
-						.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
 		jLabel9.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
 		jLabel9.setText("QUẢN LÍ KHÁCH HÀNG");
 
 		GroupLayout jPanel11Layout = new GroupLayout(jPanel11);
+		jPanel11Layout.setHorizontalGroup(jPanel11Layout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(Alignment.LEADING, jPanel11Layout.createSequentialGroup().addGap(14)
+						.addComponent(jLabel9, GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE).addGap(14)));
+		jPanel11Layout.setVerticalGroup(jPanel11Layout.createParallelGroup(Alignment.LEADING)
+				.addGroup(Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
+						.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(jLabel9, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE).addGap(7)));
 		jPanel11.setLayout(jPanel11Layout);
-		jPanel11Layout.setHorizontalGroup(jPanel11Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(jPanel11Layout.createSequentialGroup().addGap(18, 18, 18)
-						.addComponent(jLabel9, GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE).addContainerGap()));
-		jPanel11Layout.setVerticalGroup(jPanel11Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(jPanel11Layout.createSequentialGroup().addGap(27, 27, 27)
-						.addComponent(jLabel9, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-						.addContainerGap(27, Short.MAX_VALUE)));
 
 		jTableKhachhang
 				.setModel(new DefaultTableModel(
@@ -353,50 +318,30 @@ public class khachhangform extends JFrame {
 		});
 		jScrollPane2.setViewportView(jTableKhachhang);
 
-		GroupLayout jPanel4Layout = new GroupLayout(jPanel4);
-		jPanel4.setLayout(jPanel4Layout);
-		jPanel4Layout.setHorizontalGroup(jPanel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(jPanel4Layout.createSequentialGroup().addGap(36, 36, 36)
-						.addComponent(jPanel12, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE)
-						.addGap(27, 27, 27)
-						.addGroup(jPanel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-								.addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 637, GroupLayout.PREFERRED_SIZE)
-								.addGroup(jPanel4Layout.createSequentialGroup().addGap(162, 162, 162).addComponent(
-										jPanel11, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE)))
-						.addContainerGap(22, Short.MAX_VALUE)));
-		jPanel4Layout.setVerticalGroup(jPanel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(jPanel4Layout.createSequentialGroup().addGap(27, 27, 27).addGroup(jPanel4Layout
-						.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(jPanel12, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE)
-						.addGroup(jPanel4Layout.createSequentialGroup()
-								.addComponent(jPanel11, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE)
-								.addGap(22, 22, 22).addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 275,
-										GroupLayout.PREFERRED_SIZE)))
-						.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+		GroupLayout gl_jPanel4 = new GroupLayout(jPanel4);
+		gl_jPanel4.setHorizontalGroup(gl_jPanel4.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_jPanel4.createSequentialGroup().addGroup(gl_jPanel4.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_jPanel4.createSequentialGroup().addContainerGap()
+								.addComponent(jPanel12, GroupLayout.PREFERRED_SIZE, 328, GroupLayout.PREFERRED_SIZE)
+								.addGap(18).addComponent(jScrollPane2, GroupLayout.DEFAULT_SIZE, 776, Short.MAX_VALUE))
+						.addGroup(gl_jPanel4.createSequentialGroup().addGap(426).addComponent(jPanel11,
+								GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+						.addContainerGap()));
+		gl_jPanel4.setVerticalGroup(gl_jPanel4.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_jPanel4.createSequentialGroup().addGap(4)
+						.addComponent(jPanel11, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE).addGap(11)
+						.addGroup(gl_jPanel4.createParallelGroup(Alignment.LEADING)
+								.addComponent(jScrollPane2, GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
+								.addComponent(jPanel12, GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE))
+						.addContainerGap()));
+		jPanel4.setLayout(gl_jPanel4);
 
 		GroupLayout layout = new GroupLayout(getContentPane());
+		layout.setHorizontalGroup(layout.createParallelGroup(Alignment.TRAILING).addComponent(jPanel4,
+				Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 1142, Short.MAX_VALUE));
+		layout.setVerticalGroup(layout.createParallelGroup(Alignment.TRAILING).addComponent(jPanel4, Alignment.LEADING,
+				GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE));
 		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(
-				layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 1089, Short.MAX_VALUE)
-						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-								.addGroup(GroupLayout.Alignment.TRAILING,
-										layout.createSequentialGroup()
-												.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-												.addComponent(jPanel4, GroupLayout.PREFERRED_SIZE,
-														GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-												.addContainerGap())));
-		layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGap(0, 461, Short.MAX_VALUE)
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
-						GroupLayout.Alignment.TRAILING,
-						layout.createSequentialGroup().addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addComponent(jPanel4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE)
-								.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))));
 
 		pack();
 	}// </editor-fold>//GEN-END:initComponents
@@ -409,21 +354,19 @@ public class khachhangform extends JFrame {
 		// TODO add your handling code here:
 	}// GEN-LAST:event_jTextFieldTENKHActionPerformed
 
-	private void jTextFieldMAPHONGKHActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jTextFieldMAPHONGKHActionPerformed
-		// TODO add your handling code here:
-	}// GEN-LAST:event_jTextFieldMAPHONGKHActionPerformed
-
 	private void them1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_them1ActionPerformed
 		// TODO add your handling code here:
+
+		String maPhong = ((Phong) comboBoxMAPHONGKH.getSelectedObjects()[0]).getMaPhong();
+
 		Connection con = getConnection();
 		try {
-			// Táº¡o má»™t Ä‘á»‘i tÆ°á»£ng Ä‘á»ƒ thá»±c hiá»‡n cÃ´ng viá»‡c
 			st = (Statement) con.createStatement();
 			String query = "INSERT INTO khachhang(MAKH,TENKH, CMND, QUOCTICH, GIOITINH, TUOI, SDT, MAPHONG) VALUES('"
 					+ jTextFieldMAKH.getText() + "'," + "'" + jTextFieldTENKH.getText() + "','"
 					+ jTextFieldCMND.getText() + "', '" + jTextFieldQUOCTICH.getText() + "', '"
-					+ jTextFieldGIOITINHKH.getText() + "', '" + jTextFieldTUOI.getText() + "', '"
-					+ jTextFieldSDT.getText() + "', '" + jTextFieldMAPHONGKH.getText() + "')";
+					+ comboBoxGIOITINH.getSelectedItem() + "', '" + jTextFieldTUOI.getText() + "', '"
+					+ jTextFieldSDT.getText() + "', '" + maPhong + "')";
 
 			st.execute(query);
 			hienThiDanhSachKhachHang();
@@ -443,23 +386,28 @@ public class khachhangform extends JFrame {
 				// lblError.setText("You must select a Tennis Player");
 			}
 		} else {
+			String maPhong = ((Phong) comboBoxMAPHONGKH.getSelectedObjects()[0]).getMaPhong();
+
 			DefaultTableModel model = (DefaultTableModel) jTableKhachhang.getModel();
 			model.setValueAt(jTextFieldMAKH.getText(), jTableKhachhang.getSelectedRow(), 0);
 			model.setValueAt(jTextFieldTENKH.getText().toString(), jTableKhachhang.getSelectedRow(), 1);
 			model.setValueAt(jTextFieldCMND.getText(), jTableKhachhang.getSelectedRow(), 2);
 			model.setValueAt(jTextFieldQUOCTICH.getText(), jTableKhachhang.getSelectedRow(), 3);
-			model.setValueAt(jTextFieldGIOITINHKH.getText(), jTableKhachhang.getSelectedRow(), 4);
+			model.setValueAt(comboBoxGIOITINH.getSelectedItem(), jTableKhachhang.getSelectedRow(), 4);
 			model.setValueAt(jTextFieldTUOI.getText(), jTableKhachhang.getSelectedRow(), 5);
 			model.setValueAt(jTextFieldSDT.getText(), jTableKhachhang.getSelectedRow(), 6);
-			model.setValueAt(jTextFieldMAPHONGKH.getText(), jTableKhachhang.getSelectedRow(), 7);
+			model.setValueAt(comboBoxMAPHONGKH.getSelectedItem(), jTableKhachhang.getSelectedRow(), 7);
 			Connection con = getConnection();
 			try {
 				st = (Statement) con.createStatement();
-				String query = String.format("UPDATE KhachHang SET TENKH ='%s', CMND = %s , QUOCTICH ='%s' ,GIOITINH ='%s' , TUOI = %s , SDT = %s ,  MAPHONG = '%s' WHERE MAKH = '%s'", jTextFieldTENKH.getText(), 
-						jTextFieldCMND.getText(), jTextFieldQUOCTICH.getText(),jTextFieldGIOITINHKH.getText(),jTextFieldTUOI.getText(),jTextFieldSDT.getText(),jTextFieldMAPHONGKH.getText(),jTextFieldMAKH.getText()); 
-				
+				String query = String.format(
+						"UPDATE KhachHang SET TENKH ='%s', CMND = %s , QUOCTICH ='%s' ,GIOITINH ='%s' , TUOI = %s , SDT = %s ,  MAPHONG = '%s' WHERE MAKH = '%s'",
+						jTextFieldTENKH.getText(), jTextFieldCMND.getText(), jTextFieldQUOCTICH.getText(),
+						comboBoxGIOITINH.getSelectedItem(), jTextFieldTUOI.getText(), jTextFieldSDT.getText(), maPhong,
+						jTextFieldMAKH.getText());
+
 				System.out.println("sql : " + query);
-				
+
 				st.execute(query);
 				hienThiDanhSachKhachHang();
 
@@ -467,10 +415,8 @@ public class khachhangform extends JFrame {
 				ex.printStackTrace();
 			}
 
-		
-
 		}
-		
+
 	}// GEN-LAST:event_sua1ActionPerformed
 
 	private void xoa1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_xoa1ActionPerformed
@@ -501,15 +447,8 @@ public class khachhangform extends JFrame {
 	}// GEN-LAST:event_thoat1ActionPerformed
 
 	private void jButtonclear2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButtonclear2ActionPerformed
-		// TODO add your handling code here:
-		jTextFieldMAKH.setText("");
-		jTextFieldTENKH.setText("");
-		jTextFieldCMND.setText("");
-		jTextFieldQUOCTICH.setText("");
-		jTextFieldGIOITINHKH.setText("");
-		jTextFieldTUOI.setText("");
-		jTextFieldSDT.setText("");
-		jTextFieldMAPHONGKH.setText("");
+
+		setEmptyAll();
 		jTextFieldMAKH.requestFocus();
 
 	}// GEN-LAST:event_jButtonclear2ActionPerformed
@@ -522,10 +461,19 @@ public class khachhangform extends JFrame {
 		jTextFieldTENKH.setText(model.getValueAt(i, 1).toString());
 		jTextFieldCMND.setText(model.getValueAt(i, 2).toString());
 		jTextFieldQUOCTICH.setText(model.getValueAt(i, 3).toString());
-		jTextFieldGIOITINHKH.setText(model.getValueAt(i, 4).toString());
+		comboBoxGIOITINH.setSelectedIndex(model.getValueAt(i, 4).toString().equals("NAM") ? 0 : 1);
 		jTextFieldTUOI.setText(model.getValueAt(i, 5).toString());
 		jTextFieldSDT.setText(model.getValueAt(i, 6).toString());
-		jTextFieldMAPHONGKH.setText(model.getValueAt(i, 7).toString());
+
+		String maPhong = model.getValueAt(i, 7).toString();
+		int index = 0;
+		for (Phong phong : dsphong) {
+			if (phong.getMaPhong().equals(maPhong)) {
+				break;
+			}
+			index++;
+		}		
+		comboBoxMAPHONGKH.setSelectedIndex(index);
 	}// GEN-LAST:event_jTableKhachhangMouseClicked
 
 	/**
@@ -584,13 +532,10 @@ public class khachhangform extends JFrame {
 	private JLabel jLabel9;
 	private JPanel jPanel11;
 	private JPanel jPanel12;
-	private JPanel jPanel4;
 	private JScrollPane jScrollPane2;
 	private JTable jTableKhachhang;
 	private JTextField jTextFieldCMND;
-	private JTextField jTextFieldGIOITINHKH;
 	private JTextField jTextFieldMAKH;
-	private JTextField jTextFieldMAPHONGKH;
 	private JTextField jTextFieldQUOCTICH;
 	private JTextField jTextFieldSDT;
 	private JTextField jTextFieldTENKH;
@@ -599,5 +544,40 @@ public class khachhangform extends JFrame {
 	private JButton them1;
 	private JButton thoat1;
 	private JButton xoa1;
+	private JPanel jPanel4;
+	private JComboBox comboBoxGIOITINH;
+	private JComboBox comboBoxMAPHONGKH;
+
 	// End of variables declaration//GEN-END:variables
+
+	private void setLocationDefault(int w, int h) {
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+
+		int x = (dim.width - w) / 2;
+		int y = (dim.height - h) / 2;
+
+		// Move the window
+		this.setLocation(x, y);
+	}
+
+	private void setEmptyAll() {
+		jTextFieldMAKH.setText("");
+		jTextFieldTENKH.setText("");
+		jTextFieldCMND.setText("");
+		jTextFieldQUOCTICH.setText("");
+		comboBoxGIOITINH.setSelectedIndex(0);
+		jTextFieldTUOI.setText("");
+		jTextFieldSDT.setText("");
+		comboBoxMAPHONGKH.setSelectedIndex(0);
+	}
+
+	private void loadComboxbo() {
+		dsphong = phongControl.layDanhSachPhong();
+
+		DefaultComboBoxModel<Phong> comboBoxModelPhong = new DefaultComboBoxModel<>(
+				dsphong.toArray(new Phong[dsphong.size()]));
+		comboBoxMAPHONGKH.setModel(comboBoxModelPhong);
+
+	}
+
 }

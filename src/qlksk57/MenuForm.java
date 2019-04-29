@@ -5,6 +5,8 @@
  */
 package qlksk57;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,6 +26,9 @@ import qlksk57.Form.hoadonform;
 import qlksk57.Form.khachhangform;
 import qlksk57.Form.nhanvienform;
 import qlksk57.Form.phongform;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.Font;
 
 /**
  *
@@ -36,7 +41,10 @@ public class MenuForm extends JFrame {
 	 * Creates new form MenuForm
 	 */
 	public MenuForm() {
+		setResizable(false);
 		initComponents();
+		
+		setLocationDefault(400, 350);
 	}
 
 	/**
@@ -104,48 +112,49 @@ public class MenuForm extends JFrame {
 				jButton4ActionPerformed(evt);			}
 		});
 
-		jLabel1.setFont(new java.awt.Font("Yu Gothic UI Light", 0, 48)); // NOI18N
+		jLabel1.setFont(new Font("Yu Gothic UI Semibold", Font.BOLD, 48)); // NOI18N
 		jLabel1.setText("HOTEL  MANAGE");
 
 		GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
+		jPanel1Layout.setHorizontalGroup(
+			jPanel1Layout.createParallelGroup(Alignment.LEADING)
+				.addGroup(jPanel1Layout.createSequentialGroup()
+					.addGap(18)
+					.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(jButtonnhanvien, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(jButton1, GroupLayout.PREFERRED_SIZE, 184, GroupLayout.PREFERRED_SIZE))
+					.addGap(44)
+					.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
+						.addComponent(jButton3, GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
+						.addComponent(jButton2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+					.addGap(18))
+				.addGroup(jPanel1Layout.createSequentialGroup()
+					.addGap(139)
+					.addComponent(jButton4, GroupLayout.PREFERRED_SIZE, 161, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(151, Short.MAX_VALUE))
+				.addGroup(Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+					.addContainerGap(44, Short.MAX_VALUE)
+					.addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 375, GroupLayout.PREFERRED_SIZE)
+					.addGap(32))
+		);
+		jPanel1Layout.setVerticalGroup(
+			jPanel1Layout.createParallelGroup(Alignment.LEADING)
+				.addGroup(jPanel1Layout.createSequentialGroup()
+					.addGap(19)
+					.addComponent(jLabel1)
+					.addGap(28)
+					.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(jButton3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(jButtonnhanvien))
+					.addPreferredGap(ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+					.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
+						.addComponent(jButton2)
+						.addComponent(jButton1))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(jButton4, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+					.addGap(18))
+		);
 		jPanel1.setLayout(jPanel1Layout);
-		jPanel1Layout.setHorizontalGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(jPanel1Layout.createSequentialGroup().addGap(26, 26, 26).addGroup(jPanel1Layout
-						.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addGroup(jPanel1Layout.createSequentialGroup()
-								.addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-										.addComponent(jButton1, GroupLayout.PREFERRED_SIZE, 184,
-												GroupLayout.PREFERRED_SIZE)
-										.addComponent(jButtonnhanvien))
-								.addGap(44, 44, 44)
-								.addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-										.addComponent(jButton2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
-												Short.MAX_VALUE)
-										.addComponent(jButton3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
-												Short.MAX_VALUE))
-								.addGap(40, 40, 40))
-						.addGroup(
-								jPanel1Layout.createSequentialGroup()
-										.addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 375,
-												GroupLayout.PREFERRED_SIZE)
-										.addGap(36, 36, 36))))
-				.addGroup(jPanel1Layout.createSequentialGroup().addGap(145, 145, 145)
-						.addComponent(jButton4, GroupLayout.PREFERRED_SIZE, 161, GroupLayout.PREFERRED_SIZE)
-						.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
-		jPanel1Layout.setVerticalGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(jPanel1Layout.createSequentialGroup().addGap(36, 36, 36).addComponent(jLabel1)
-						.addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-								.addGroup(jPanel1Layout.createSequentialGroup()
-										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
-										.addComponent(jButtonnhanvien).addGap(18, 18, 18))
-								.addGroup(jPanel1Layout.createSequentialGroup().addGap(18, 18, 18)
-										.addComponent(jButton3).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
-												GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-						.addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-								.addComponent(jButton2).addComponent(jButton1))
-						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(jButton4, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
-						.addContainerGap()));
 
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
@@ -252,4 +261,14 @@ public class MenuForm extends JFrame {
 	private JLabel jLabel1;
 	private JPanel jPanel1;
 	// End of variables declaration//GEN-END:variables
+	
+	private void setLocationDefault(int w, int h) {
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+
+		int x = (dim.width - w) / 2;
+		int y = (dim.height - h) / 2;
+
+		// Move the window
+		 this.setLocation(x, y);
+	}
 }

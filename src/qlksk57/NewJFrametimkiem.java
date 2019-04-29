@@ -5,6 +5,8 @@
  */
 package qlksk57;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -197,4 +199,17 @@ public class NewJFrametimkiem extends javax.swing.JFrame {
     private javax.swing.JTable jTabletimkiemnhanvien;
     private javax.swing.JTextField jTextFieldTKnhanvien;
     // End of variables declaration//GEN-END:variables
+    
+    private void setLocationDefault(int w, int h) {
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+
+		System.out.println(dim.width + " " + dim.height);
+		System.out.println(w + " " + h);
+
+		int x = (dim.width - w) / 2;
+		int y = (dim.height - h) / 2;
+
+		// Move the window
+		 this.setLocation(x, y);
+	}
 }

@@ -4,21 +4,26 @@
  * and open the template in the editor.
  */
 package qlksk57.Form;
+import static qlksk57.MyConnection.getConnection;
+
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
-import qlksk57.HoaDon;
-import static qlksk57.MyConnection.getConnection;
+
+import qlksk57.control.HoaDonControl;
+import qlksk57.models.HoaDon;
 /**
  *
  * @author khoa
  */
 public class hoadonform extends javax.swing.JFrame {
 
+	HoaDonControl hoaDonControl = new HoaDonControl();
+	
     /**
      * Creates new form hoadonform
      */
@@ -31,31 +36,9 @@ public class hoadonform extends javax.swing.JFrame {
     Connection con=null;
     Statement st=null;
     
-    public ArrayList<HoaDon> layDanhSachHoaDon() {
-        ArrayList<HoaDon> dshd = new ArrayList<HoaDon>();
-        Connection con = getConnection();
-        try {
-            st = (Statement) con.createStatement();
-            String sql = "SELECT * FROM hoadon";
-            // ThÆ°cj thi cÃ¢u lá»‡nh truy váº¥n
-            ResultSet rs = st.executeQuery(sql);
-
-            HoaDon hd;
-            while (rs.next()) {
-                hd = new HoaDon(rs.getString("MAHD"), rs.getString("MANV"), rs.getString("MAPHONG"), rs.getDate("NGAY"), rs.getDouble("GIAHD") );
-
-                //ThÃªm vÃ o danh sÃ¡ch
-                dshd.add(hd);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-
-        }
-        return dshd;
-    }
      public void hienThiDanhSachHoaDon() {
         String colTieuDe1[] = new String[]{"Mã hóa đơn", "Mã nhân viên", "Mã phòng", "Ngày", "Giá hóa đơn"};
-        ArrayList<HoaDon> dshd = layDanhSachHoaDon();
+        ArrayList<HoaDon> dshd = hoaDonControl.layDanhSachHoaDon();
 
         DefaultTableModel model = new DefaultTableModel(colTieuDe1, 0);
 

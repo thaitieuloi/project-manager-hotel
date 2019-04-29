@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package qlksk57;
+package qlksk57.models;
 
 
 public class Phong {
@@ -165,24 +165,9 @@ public class Phong {
 
 	@Override
     public String toString() {
-        return "Phong{" + "MAPHONG=" + maPhong + ", TENPHONG=" + tenPhong + ", LOAIPHONG=" + loaiPhong + ", GIAPHONG=" + giaPhong + ", CHUTHICH=" + chuThich + ", TINHTRANG=" + tinhTrang + ", MANV=" + maNV + ", MADV=" + maDV + '}';
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+//        return "Phong{" + "MAPHONG=" + maPhong + ", TENPHONG=" + tenPhong + ", LOAIPHONG=" + loaiPhong + ", GIAPHONG=" + giaPhong + ", CHUTHICH=" + chuThich + ", TINHTRANG=" + tinhTrang + ", MANV=" + maNV + ", MADV=" + maDV + '}';
+		return tenPhong;
+	}
     
     
     

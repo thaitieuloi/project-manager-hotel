@@ -5,7 +5,17 @@
  */
 package qlksk57;
 
+import static qlksk57.MyConnection.getConnection;
+
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+
 import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,19 +24,30 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.LayoutStyle;
+import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 
+import org.apache.commons.lang3.StringUtils;
+
+import qlksk57.models.User;
+import qlksk57.models.UserEnum;
+import java.awt.Font;
+
 @SuppressWarnings("serial")
 public class dang_nhap extends JFrame {
+
+	private Connection con = null;
+	private Statement st = null;
 
 	/**
 	 * Creates new form dang_nhap
 	 */
 	public dang_nhap() {
+		setResizable(false);
 		initComponents();
+		setLocationDefault(400, 300);
 	}
 
 	/**
@@ -72,61 +93,61 @@ public class dang_nhap extends JFrame {
 		jLabel2.setIcon(new ImageIcon(getClass().getResource("/qlksk57/Form/hinh/ssssss.png"))); // NOI18N
 		jLabel2.setText("Pass");
 
-		jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+		jLabel3.setFont(new Font("Times New Roman", Font.BOLD, 20)); // NOI18N
 		jLabel3.setText("Quản Lí Khách Sạn");
 
 		jLabel4.setIcon(new ImageIcon(getClass().getResource("/qlksk57/Form/hinh/eeeeeeeeeeeeeee.png"))); // NOI18N
 
 		GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
-		jPanel1.setLayout(jPanel1Layout);
-		jPanel1Layout
-				.setHorizontalGroup(
-						jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-								.addGroup(jPanel1Layout
-										.createSequentialGroup().addGap(127, 127, 127)
-										.addComponent(jButton1, GroupLayout.PREFERRED_SIZE, 185,
+		jPanel1Layout.setHorizontalGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
+				.addGroup(jPanel1Layout.createSequentialGroup().addGap(51)
+						.addGroup(jPanel1Layout.createParallelGroup(Alignment.TRAILING)
+								.addGroup(jPanel1Layout.createSequentialGroup()
+										.addComponent(jLabel4, GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
+										.addPreferredGap(ComponentPlacement.UNRELATED)
+										.addComponent(jLabel3, GroupLayout.PREFERRED_SIZE, 194,
 												GroupLayout.PREFERRED_SIZE)
-										.addGap(0, 0, Short.MAX_VALUE))
-								.addGroup(jPanel1Layout.createSequentialGroup().addGap(51, 51, 51)
-										.addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-												.addGroup(GroupLayout.Alignment.TRAILING, jPanel1Layout
-														.createSequentialGroup()
-														.addComponent(
-																jLabel4, GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
-														.addGap(18, 18, 18)
-														.addComponent(
-																jLabel3, GroupLayout.PREFERRED_SIZE, 194,
-																GroupLayout.PREFERRED_SIZE)
-														.addGap(42, 42, 42))
-												.addGroup(jPanel1Layout.createSequentialGroup().addGroup(jPanel1Layout
-														.createParallelGroup(GroupLayout.Alignment.LEADING)
-														.addComponent(jLabel2, GroupLayout.PREFERRED_SIZE, 107,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(jLabel1)).addGap(18, 18, 18)
-														.addGroup(jPanel1Layout
-																.createParallelGroup(GroupLayout.Alignment.LEADING,
-																		false)
-																.addComponent(Password, GroupLayout.DEFAULT_SIZE, 125,
-																		Short.MAX_VALUE)
-																.addComponent(txtUser))
-														.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))));
-		jPanel1Layout.setVerticalGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+										.addGap(50))
+								.addGroup(jPanel1Layout
+										.createSequentialGroup()
+										.addGroup(jPanel1Layout
+												.createParallelGroup(Alignment.LEADING)
+												.addComponent(jLabel2, GroupLayout.PREFERRED_SIZE, 107,
+														GroupLayout.PREFERRED_SIZE)
+												.addComponent(jLabel1))
+										.addGroup(jPanel1Layout.createParallelGroup(Alignment.TRAILING)
+												.addGroup(jPanel1Layout.createSequentialGroup().addGap(18).addComponent(
+														jButton1, GroupLayout.PREFERRED_SIZE, 185,
+														GroupLayout.PREFERRED_SIZE))
+												.addGroup(Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+														.addPreferredGap(ComponentPlacement.RELATED)
+														.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
+																.addComponent(Password).addComponent(txtUser,
+																		GroupLayout.DEFAULT_SIZE, 189,
+																		Short.MAX_VALUE))))
+										.addContainerGap(24, GroupLayout.PREFERRED_SIZE)))));
+		jPanel1Layout.setVerticalGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
 				.addGroup(jPanel1Layout.createSequentialGroup()
-						.addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-								.addGroup(jPanel1Layout.createSequentialGroup().addGap(36, 36, 36).addComponent(jLabel3,
-										GroupLayout.PREFERRED_SIZE, 67, GroupLayout.PREFERRED_SIZE))
-								.addGroup(jPanel1Layout.createSequentialGroup().addContainerGap().addComponent(jLabel4,
-										GroupLayout.PREFERRED_SIZE, 136, GroupLayout.PREFERRED_SIZE)))
-						.addGap(18, 18, 18)
-						.addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jLabel1)
+						.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING, false)
+								.addGroup(jPanel1Layout.createSequentialGroup().addContainerGap()
+										.addComponent(jLabel4, GroupLayout.PREFERRED_SIZE, 136,
+												GroupLayout.PREFERRED_SIZE)
+										.addGap(18))
+								.addGroup(Alignment.TRAILING,
+										jPanel1Layout.createSequentialGroup()
+												.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+												.addComponent(jLabel3, GroupLayout.PREFERRED_SIZE, 67,
+														GroupLayout.PREFERRED_SIZE)
+												.addGap(47)))
+						.addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE).addComponent(jLabel1)
 								.addComponent(txtUser, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
 										GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE,
-								Short.MAX_VALUE)
-						.addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-								.addComponent(jLabel2).addComponent(Password, GroupLayout.PREFERRED_SIZE,
-										GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addGap(18, 18, 18).addComponent(jButton1).addGap(54, 54, 54)));
+						.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE).addComponent(jLabel2)
+								.addComponent(Password, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+										GroupLayout.PREFERRED_SIZE))
+						.addGap(18).addComponent(jButton1).addGap(54)));
+		jPanel1.setLayout(jPanel1Layout);
 
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
@@ -146,23 +167,57 @@ public class dang_nhap extends JFrame {
 
 	@SuppressWarnings("deprecation")
 	private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
-		// TODO add your handling code here:
-		if (txtUser.getText().equals("")) {
+
+		String userName = txtUser.getText();
+		String password = Password.getText();
+		
+		if (StringUtils.isEmpty(userName)) {
 			JOptionPane.showMessageDialog(this, "Vui lòng nhập tài Khoản");
-		} else if (Password.getText().equals("")) {
+			txtUser.requestFocus();
+		} else if (StringUtils.isEmpty(password)) {
 			JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu");
-		} else if (txtUser.getText().equals("BTL")) {
-			if (Password.getText().equals("BTL")) {
-				JOptionPane.showMessageDialog(this, "Đăng đã nhập thành công");
-				MENUFORM ql = new MENUFORM();
-				ql.setVisible(true);
-				this.setVisible(false);
-			} else {
-				JOptionPane.showMessageDialog(this, "Sai mật khẩu");
-			}
+			Password.requestFocus();
 		} else {
-			JOptionPane.showMessageDialog(this, "Đăng nhập thất bại");
+			
+			if(checkInjection(userName) || checkInjection(password)) {
+				JOptionPane.showMessageDialog(this, "Nhập sai vui lòng nhập lại");
+				return;
+			}
+			
+			con = getConnection();
+			try {
+				st = (Statement) con.createStatement();
+				String query = String.format("SELECT * FROM users WHERE USERNAME LIKE '%s' AND PASSWORD LIKE '%s'",
+						txtUser.getText(), Password.getText());
+
+				System.out.println("sql : " + query);
+				ResultSet rs = st.executeQuery(query);
+				ArrayList<User> listUser = new ArrayList<User>();
+				User user;
+				while (rs.next()) {
+					user = new User(Integer.parseInt(rs.getString(UserEnum.ID.toString())),
+							rs.getString(UserEnum.UserName.getText()), rs.getString(UserEnum.Password.getText()));
+					listUser.add(user);
+				}
+
+				if (listUser.size() > 0) {
+					JOptionPane.showMessageDialog(this, "Đăng đã nhập thành công");
+					MenuForm ql = new MenuForm();
+					ql.setVisible(true);
+					this.setVisible(false);
+				} else {
+					JOptionPane.showMessageDialog(this, "Tên đăng nhặp hoặc mật khẩu sai.");
+				}
+				// hienThiDanhSachDichVu();
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
 		}
+		// else {
+		// JOptionPane.showMessageDialog(this, "Đăng nhập thất bại");
+		// }
 	}// GEN-LAST:event_jButton1ActionPerformed
 
 	/**
@@ -214,4 +269,20 @@ public class dang_nhap extends JFrame {
 	private JPanel jPanel1;
 	private JTextField txtUser;
 	// End of variables declaration//GEN-END:variables
+	
+	private void setLocationDefault(int w, int h) {
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+
+		int x = (dim.width - w) / 2;
+		int y = (dim.height - h) / 2;
+
+		// Move the window
+		 this.setLocation(x, y);
+	}
+	
+	private Boolean checkInjection(String val) {
+		if(val.contains("\"") ||  val.contains("'"))
+			return true;
+		return false;
+	}
 }

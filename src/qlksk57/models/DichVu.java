@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package qlksk57;
+package qlksk57.models;
 
 
 public class DichVu {
@@ -85,7 +85,8 @@ public class DichVu {
 
 	@Override
     public String toString() {
-        return "DichVu{" + "MADV=" + maDV + ", TENNVL=" + tenNVL + ", GIADV=" + giaDV + '}';
+//        return "DichVu{" + "MADV=" + maDV + ", TENNVL=" + tenNVL + ", GIADV=" + giaDV + '}';
+		return tenNVL;
     }
     
     

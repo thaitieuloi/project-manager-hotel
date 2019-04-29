@@ -7,6 +7,8 @@ package qlksk57.Form;
 
 import static qlksk57.MyConnection.getConnection;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -34,7 +36,12 @@ import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-import qlksk57.DichVu;
+import org.apache.commons.lang3.StringUtils;
+
+import qlksk57.control.DichVuControl;
+import qlksk57.models.DichVu;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 /**
  *
@@ -44,44 +51,26 @@ import qlksk57.DichVu;
 @SuppressWarnings("serial")
 public class dichvuform extends JFrame {
 
+	DichVuControl dichVuControl = new DichVuControl();
+	
 	/**
 	 * Creates new form dichvuform
 	 */
 	public dichvuform() {
+		setResizable(false);
 		initComponents();
 		getConnection();
 		hienThiDanhSachDichVu();
+		setLocationDefault(900, 500);
 	}
 
 	Connection con = null;
 	Statement st = null;
 
-	public ArrayList<DichVu> layDanhSachDichVu() {
-		ArrayList<DichVu> dsdv = new ArrayList<DichVu>();
-		Connection con = getConnection();
-		try {
-			st = (Statement) con.createStatement();
-			String sql = "SELECT * FROM dichvu";
-			// ThÆ°cj thi cÃ¢u lá»‡nh truy váº¥n
-			ResultSet rs = st.executeQuery(sql);
-
-			DichVu dv;
-			while (rs.next()) {
-				dv = new DichVu(rs.getString("MADV"), rs.getString("TENDV"), rs.getDouble("GIADV"));
-
-				// ThÃªm vÃ o danh sÃ¡ch
-				dsdv.add(dv);
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-
-		}
-		return dsdv;
-	}
 
 	public void hienThiDanhSachDichVu() {
-		String colTieuDe1[] = new String[] { "Mã dịch vụ", "Tên dịch vụ", "Giá dịch vũ" };
-		ArrayList<DichVu> dsdv = layDanhSachDichVu();
+		String colTieuDe1[] = new String[] { "Mã dịch vụ", "Tên dịch vụ", "Giá dịch vụ" };
+		ArrayList<DichVu> dsdv = dichVuControl.layDanhSachDichVu();
 
 		DefaultTableModel model = new DefaultTableModel(colTieuDe1, 0);
 
@@ -91,7 +80,6 @@ public class dichvuform extends JFrame {
 
 			row = new Object[3];
 
-			// GÃ�N GIÃ� TRá»Š
 			row[0] = dsdv.get(i).getMaDV();
 			row[1] = dsdv.get(i).getTenNVL();
 			row[2] = dsdv.get(i).getGiaDV();
@@ -103,6 +91,7 @@ public class dichvuform extends JFrame {
 
 		jTableDichvu.setModel(model);
 
+		setEmptyAll();
 	}
 
 	/**
@@ -141,16 +130,21 @@ public class dichvuform extends JFrame {
 		jLabel18.setText("DANH SÁCH DỊCH VỤ");
 
 		GroupLayout jPanel14Layout = new GroupLayout(jPanel14);
+		jPanel14Layout.setHorizontalGroup(
+			jPanel14Layout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(jPanel14Layout.createSequentialGroup()
+					.addContainerGap(78, Short.MAX_VALUE)
+					.addComponent(jLabel18, GroupLayout.PREFERRED_SIZE, 241, GroupLayout.PREFERRED_SIZE)
+					.addGap(19))
+		);
+		jPanel14Layout.setVerticalGroup(
+			jPanel14Layout.createParallelGroup(Alignment.LEADING)
+				.addGroup(jPanel14Layout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(jLabel18, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
 		jPanel14.setLayout(jPanel14Layout);
-		jPanel14Layout.setHorizontalGroup(jPanel14Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
-				GroupLayout.Alignment.TRAILING,
-				jPanel14Layout.createSequentialGroup().addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(jLabel18, GroupLayout.PREFERRED_SIZE, 241, GroupLayout.PREFERRED_SIZE)
-						.addGap(87, 87, 87)));
-		jPanel14Layout.setVerticalGroup(jPanel14Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(jPanel14Layout.createSequentialGroup().addContainerGap()
-						.addComponent(jLabel18, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
-						.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
 		jPanel15.setBorder(BorderFactory.createTitledBorder("Thông tin dịch vụ"));
 
@@ -201,50 +195,61 @@ public class dichvuform extends JFrame {
 		});
 
 		GroupLayout jPanel15Layout = new GroupLayout(jPanel15);
-		jPanel15.setLayout(jPanel15Layout);
-		jPanel15Layout.setHorizontalGroup(jPanel15Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(jPanel15Layout.createSequentialGroup().addGap(26, 26, 26).addGroup(jPanel15Layout
-						.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-						.addGroup(jPanel15Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-								.addComponent(jLabel21).addComponent(jLabel20).addComponent(jLabel19))
+		jPanel15Layout.setHorizontalGroup(
+			jPanel15Layout.createParallelGroup(Alignment.LEADING)
+				.addGroup(jPanel15Layout.createSequentialGroup()
+					.addGap(26)
+					.addGroup(jPanel15Layout.createParallelGroup(Alignment.LEADING, false)
+						.addGroup(jPanel15Layout.createParallelGroup(Alignment.TRAILING)
+							.addComponent(jLabel21)
+							.addComponent(jLabel20)
+							.addComponent(jLabel19))
 						.addComponent(them2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addComponent(xoa2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-						.addGroup(jPanel15Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
-								jPanel15Layout.createSequentialGroup().addGap(25, 25, 25).addGroup(jPanel15Layout
-										.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-										.addComponent(jTextFieldMADV, GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
-										.addComponent(jTextFieldTENDV).addComponent(jTextFieldGIADV)))
-								.addGroup(jPanel15Layout.createSequentialGroup().addGap(18, 18, 18)
-										.addGroup(jPanel15Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-												.addComponent(thoat2)
-												.addGroup(jPanel15Layout.createSequentialGroup()
-														.addComponent(sua2, GroupLayout.PREFERRED_SIZE, 72,
-																GroupLayout.PREFERRED_SIZE)
-														.addGap(18, 18, 18).addComponent(jButtonclear1)))))
-						.addContainerGap(31, Short.MAX_VALUE)));
-		jPanel15Layout
-				.setVerticalGroup(jPanel15Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addGroup(jPanel15Layout.createSequentialGroup().addGap(21, 21, 21)
-								.addGroup(jPanel15Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-										.addComponent(jLabel19).addComponent(jTextFieldMADV, GroupLayout.PREFERRED_SIZE,
-												GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-								.addGap(18, 18, 18)
-								.addGroup(jPanel15Layout
-										.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(jLabel20)
-										.addComponent(jTextFieldTENDV, GroupLayout.PREFERRED_SIZE,
-												GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-								.addGap(23, 23, 23)
-								.addGroup(jPanel15Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-										.addComponent(jLabel21)
-										.addComponent(jTextFieldGIADV, GroupLayout.PREFERRED_SIZE,
-												GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-								.addGap(31, 31, 31)
-								.addGroup(jPanel15Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-										.addComponent(them2).addComponent(sua2).addComponent(jButtonclear1))
-								.addGap(18, 18, 18)
-								.addGroup(jPanel15Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-										.addComponent(xoa2).addComponent(thoat2))
-								.addContainerGap(43, Short.MAX_VALUE)));
+					.addGroup(jPanel15Layout.createParallelGroup(Alignment.LEADING)
+						.addGroup(jPanel15Layout.createSequentialGroup()
+							.addGap(25)
+							.addGroup(jPanel15Layout.createParallelGroup(Alignment.LEADING)
+								.addComponent(jTextFieldMADV, GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
+								.addComponent(jTextFieldTENDV)
+								.addComponent(jTextFieldGIADV, GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)))
+						.addGroup(jPanel15Layout.createSequentialGroup()
+							.addGap(18)
+							.addGroup(jPanel15Layout.createParallelGroup(Alignment.LEADING)
+								.addComponent(thoat2)
+								.addGroup(jPanel15Layout.createSequentialGroup()
+									.addComponent(sua2, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
+									.addGap(18)
+									.addComponent(jButtonclear1)))))
+					.addGap(31))
+		);
+		jPanel15Layout.setVerticalGroup(
+			jPanel15Layout.createParallelGroup(Alignment.LEADING)
+				.addGroup(jPanel15Layout.createSequentialGroup()
+					.addGap(21)
+					.addGroup(jPanel15Layout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(jLabel19)
+						.addComponent(jTextFieldMADV, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(jPanel15Layout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(jLabel20)
+						.addComponent(jTextFieldTENDV, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(23)
+					.addGroup(jPanel15Layout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(jLabel21)
+						.addComponent(jTextFieldGIADV, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(31)
+					.addGroup(jPanel15Layout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(them2)
+						.addComponent(sua2)
+						.addComponent(jButtonclear1))
+					.addGap(18)
+					.addGroup(jPanel15Layout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(xoa2)
+						.addComponent(thoat2))
+					.addContainerGap(43, Short.MAX_VALUE))
+		);
+		jPanel15.setLayout(jPanel15Layout);
 
 		jTableDichvu
 				.setModel(new DefaultTableModel(
@@ -259,30 +264,32 @@ public class dichvuform extends JFrame {
 		jScrollPane3.setViewportView(jTableDichvu);
 
 		GroupLayout jPanel7Layout = new GroupLayout(jPanel7);
+		jPanel7Layout.setHorizontalGroup(
+			jPanel7Layout.createParallelGroup(Alignment.LEADING)
+				.addGroup(jPanel7Layout.createSequentialGroup()
+					.addGroup(jPanel7Layout.createParallelGroup(Alignment.LEADING)
+						.addGroup(jPanel7Layout.createSequentialGroup()
+							.addGap(46)
+							.addComponent(jPanel15, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(jScrollPane3, GroupLayout.PREFERRED_SIZE, 421, GroupLayout.PREFERRED_SIZE))
+						.addGroup(jPanel7Layout.createSequentialGroup()
+							.addGap(291)
+							.addComponent(jPanel14, GroupLayout.PREFERRED_SIZE, 252, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap(24, Short.MAX_VALUE))
+		);
+		jPanel7Layout.setVerticalGroup(
+			jPanel7Layout.createParallelGroup(Alignment.LEADING)
+				.addGroup(jPanel7Layout.createSequentialGroup()
+					.addGap(6)
+					.addComponent(jPanel14, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(11)
+					.addGroup(jPanel7Layout.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(jScrollPane3, 0, 0, Short.MAX_VALUE)
+						.addComponent(jPanel15, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
 		jPanel7.setLayout(jPanel7Layout);
-		jPanel7Layout.setHorizontalGroup(jPanel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(jPanel7Layout.createSequentialGroup().addGroup(jPanel7Layout
-						.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addGroup(jPanel7Layout.createSequentialGroup().addGap(46, 46, 46)
-								.addComponent(jPanel15, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addComponent(jScrollPane3,
-										GroupLayout.PREFERRED_SIZE, 421, GroupLayout.PREFERRED_SIZE))
-						.addGroup(jPanel7Layout.createSequentialGroup().addGap(238, 238, 238).addComponent(jPanel14,
-								GroupLayout.PREFERRED_SIZE, 252, GroupLayout.PREFERRED_SIZE)))
-						.addContainerGap(24, Short.MAX_VALUE)));
-		jPanel7Layout
-				.setVerticalGroup(jPanel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addGroup(jPanel7Layout.createSequentialGroup().addContainerGap()
-								.addComponent(jPanel14, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-								.addGroup(jPanel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-										.addComponent(jPanel15, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-												GroupLayout.PREFERRED_SIZE)
-										.addComponent(jScrollPane3, GroupLayout.PREFERRED_SIZE, 283,
-												GroupLayout.PREFERRED_SIZE))
-								.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
@@ -301,25 +308,42 @@ public class dichvuform extends JFrame {
 		pack();
 	}// </editor-fold>//GEN-END:initComponents
 
+	private String checkValide(String field) {
+
+		return "";
+	}
+
 	private void them2ActionPerformed(ActionEvent evt) {// GEN-FIRST:event_them2ActionPerformed
-		// TODO add your handling code here:
+		// Check data
+		String maDV = jTextFieldMADV.getText();
+		String maTenDV = jTextFieldTENDV.getText();
+		String giaDV = jTextFieldGIADV.getText();
+
+		if (StringUtils.isEmpty(maDV) || StringUtils.isEmpty(maTenDV) || StringUtils.isEmpty(giaDV)) {
+			JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin đầy đủ");
+			return;
+		}
+
 		Connection con = getConnection();
 		try {
-			// Táº¡o má»™t Ä‘á»‘i tÆ°á»£ng Ä‘á»ƒ thá»±c hiá»‡n cÃ´ng viá»‡c
+
 			st = (Statement) con.createStatement();
 			String query = "INSERT INTO DichVu(MADV,TENDV, GIADV) VALUES('" + jTextFieldMADV.getText() + "'," + "'"
 					+ jTextFieldTENDV.getText() + "','" + jTextFieldGIADV.getText() + "')";
 
 			st.execute(query);
 			hienThiDanhSachDichVu();
+			
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			System.out.println(ex.getMessage());
+			JOptionPane.showMessageDialog(this, ex.getMessage());
+//			ex.printStackTrace();
 		}
 	}// GEN-LAST:event_them2ActionPerformed
 
 	private void sua2ActionPerformed(ActionEvent evt) {// GEN-FIRST:event_sua2ActionPerformed
-		// TODO add your handling code here:
+		
 		if (jTableDichvu.getSelectedRow() == -1) {
 			if (jTableDichvu.getRowCount() == 0) {
 				// lblError.setText("Table is empty");
@@ -331,20 +355,32 @@ public class dichvuform extends JFrame {
 			model.setValueAt(jTextFieldMADV.getText(), jTableDichvu.getSelectedRow(), 0);
 			model.setValueAt(jTextFieldTENDV.getText().toString(), jTableDichvu.getSelectedRow(), 1);
 			model.setValueAt(jTextFieldGIADV.getText(), jTableDichvu.getSelectedRow(), 2);
-			
+
 			Connection con = getConnection();
 			try {
+				String maDV = jTextFieldMADV.getText();
+				String maTenDV = jTextFieldTENDV.getText();
+				String giaDV = jTextFieldGIADV.getText();
+
+				if (StringUtils.isEmpty(maDV) || StringUtils.isEmpty(maTenDV) || StringUtils.isEmpty(giaDV)) {
+					JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin đầy đủ");
+					return;
+				}
+				
 				st = (Statement) con.createStatement();
-				String query = String.format("UPDATE DichVu SET TENDV ='%s', GIADV = %s WHERE MADV = '%s'", jTextFieldTENDV.getText(), 
-						jTextFieldGIADV.getText(), jTextFieldMADV.getText()); 
-				
+				String query = String.format("UPDATE DichVu SET TENDV ='%s', GIADV = '%s' WHERE MADV = '%s'",
+						jTextFieldTENDV.getText(), jTextFieldGIADV.getText(), jTextFieldMADV.getText());
+
 				System.out.println("sql : " + query);
-				
+
 				st.execute(query);
 				hienThiDanhSachDichVu();
 
 			} catch (Exception ex) {
-				ex.printStackTrace();
+
+				System.out.println(ex.getMessage());
+				JOptionPane.showMessageDialog(this, ex.getMessage());
+//				ex.printStackTrace();
 			}
 
 		}
@@ -352,10 +388,14 @@ public class dichvuform extends JFrame {
 	}// GEN-LAST:event_sua2ActionPerformed
 
 	private void xoa2ActionPerformed(ActionEvent evt) {// GEN-FIRST:event_xoa2ActionPerformed
-		// TODO add your handling code here:
+
+		if(StringUtils.isEmpty(jTextFieldMADV.getText())) {
+			JOptionPane.showMessageDialog(this, "Vui lòng nhập mã dịch vụ để xóa");
+			return;
+		}
+		
 		Connection con = getConnection();
 		try {
-			// Táº¡o má»™t Ä‘á»‘i tÆ°á»£ng Ä‘á»ƒ thá»±c hiá»‡n cÃ´ng viá»‡c
 			st = (Statement) con.createStatement();
 			String query = "DELETE FROM dichvu WHERE MADV = '" + jTextFieldMADV.getText() + "'";
 			st.executeUpdate(query);
@@ -363,7 +403,9 @@ public class dichvuform extends JFrame {
 
 		} catch (Exception ex) {
 
-			ex.printStackTrace();
+			System.out.println(ex.getMessage());
+			JOptionPane.showMessageDialog(this, ex.getMessage());
+//			ex.printStackTrace();
 		}
 	}// GEN-LAST:event_xoa2ActionPerformed
 
@@ -380,15 +422,11 @@ public class dichvuform extends JFrame {
 	}// GEN-LAST:event_thoat2ActionPerformed
 
 	private void jButtonclear1ActionPerformed(ActionEvent evt) {// GEN-FIRST:event_jButtonclear1ActionPerformed
-		// TODO add your handling code here:
-		jTextFieldMADV.setText("");
-		jTextFieldTENDV.setText("");
-		jTextFieldGIADV.setText("");
+		setEmptyAll();
 		jTextFieldMADV.requestFocus();
 	}// GEN-LAST:event_jButtonclear1ActionPerformed
 
 	private void jTableDichvuMouseClicked(MouseEvent evt) {// GEN-FIRST:event_jTableDichvuMouseClicked
-		// TODO add your handling code here
 		int i = jTableDichvu.getSelectedRow();
 		TableModel model = jTableDichvu.getModel();
 		jTextFieldMADV.setText(model.getValueAt(i, 0).toString());
@@ -459,4 +497,21 @@ public class dichvuform extends JFrame {
 	private JButton thoat2;
 	private JButton xoa2;
 	// End of variables declaration//GEN-END:variables
+
+
+	private void setLocationDefault(int w, int h) {
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+
+		int x = (dim.width - w) / 2;
+		int y = (dim.height - h) / 2;
+
+		// Move the window
+		 this.setLocation(x, y);
+	}
+
+	private void setEmptyAll() {
+		jTextFieldGIADV.setText("");
+		jTextFieldMADV.setText("");
+		jTextFieldTENDV.setText("");
+	}
 }
