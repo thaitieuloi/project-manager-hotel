@@ -452,7 +452,25 @@ public class khachhangform extends JFrame {
 			model.setValueAt(jTextFieldTUOI.getText(), jTableKhachhang.getSelectedRow(), 5);
 			model.setValueAt(jTextFieldSDT.getText(), jTableKhachhang.getSelectedRow(), 6);
 			model.setValueAt(jTextFieldMAPHONGKH.getText(), jTableKhachhang.getSelectedRow(), 7);
+			Connection con = getConnection();
+			try {
+				st = (Statement) con.createStatement();
+				String query = String.format("UPDATE KhachHang SET TENKH ='%s', CMND = %s , QUOCTICH ='%s' ,GIOITINH ='%s' , TUOI = %s , SDT = %s ,  MAPHONG = '%s' WHERE MAKH = '%s'", jTextFieldTENKH.getText(), 
+						jTextFieldCMND.getText(), jTextFieldQUOCTICH.getText(),jTextFieldGIOITINHKH.getText(),jTextFieldTUOI.getText(),jTextFieldSDT.getText(),jTextFieldMAPHONGKH.getText(),jTextFieldMAKH.getText()); 
+				
+				System.out.println("sql : " + query);
+				
+				st.execute(query);
+				hienThiDanhSachKhachHang();
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+		
+
 		}
+		
 	}// GEN-LAST:event_sua1ActionPerformed
 
 	private void xoa1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_xoa1ActionPerformed

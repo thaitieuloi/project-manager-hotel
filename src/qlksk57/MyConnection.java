@@ -17,9 +17,10 @@ public class MyConnection {
         try {
             String url = "jdbc:mysql://localhost:3306/QL_KHACHSAN?useUnicode=true&characterEncoding=UTF-8";
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            String username = "phong";
-            String password = "123456";
+            String username = "root";
+            String password = "";
             conn = DriverManager.getConnection(url, username, password);
+            
         } catch (Exception e) {
             e.printStackTrace();// TODO: handle exception
         }

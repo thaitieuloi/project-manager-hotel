@@ -98,11 +98,10 @@ public class MenuForm extends JFrame {
 
 		jButton4.setBackground(new java.awt.Color(255, 255, 255));
 		jButton4.setIcon(new ImageIcon(getClass().getResource("/qlksk57/Form/hinh/sssssasasas.png"))); // NOI18N
-		jButton4.setText("Dịch vụ");
+		jButton4.setText("Hóa đơn");
 		jButton4.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				jButton4ActionPerformed(evt);
-			}
+				jButton4ActionPerformed(evt);			}
 		});
 
 		jLabel1.setFont(new java.awt.Font("Yu Gothic UI Light", 0, 48)); // NOI18N

@@ -54,7 +54,7 @@ public class hoadonform extends javax.swing.JFrame {
         return dshd;
     }
      public void hienThiDanhSachHoaDon() {
-        String colTieuDe1[] = new String[]{"MÃ£ HÃ³a Ä�Æ¡n", "MÃ£ NhÃ¢n ViÃªn", "MÃ£ PhÃ²ng", "NgÃ y", "GiÃ¡ HÃ³a Ä�Æ¡n"};
+        String colTieuDe1[] = new String[]{"Mã hóa đơn", "Mã nhân viên", "Mã phòng", "Ngày", "Giá hóa đơn"};
         ArrayList<HoaDon> dshd = layDanhSachHoaDon();
 
         DefaultTableModel model = new DefaultTableModel(colTieuDe1, 0);
@@ -119,7 +119,7 @@ public class hoadonform extends javax.swing.JFrame {
         jPanel6.setBackground(new java.awt.Color(0, 204, 255));
 
         jLabel31.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        jLabel31.setText("HÃ“A Ä�Æ N");
+        jLabel31.setText("HÓA ĐƠN");
 
         javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
         jPanel20.setLayout(jPanel20Layout);
@@ -137,17 +137,17 @@ public class hoadonform extends javax.swing.JFrame {
                 .addComponent(jLabel31))
         );
 
-        jPanel21.setBorder(javax.swing.BorderFactory.createTitledBorder("ThÃ´ng Tn HÃ³a Ä�Æ¡n"));
+        jPanel21.setBorder(javax.swing.BorderFactory.createTitledBorder("Thông tin hóa đơn"));
 
-        jLabel32.setText("MÃ£ HÃ³a Ä�Æ¡n");
+        jLabel32.setText("Mã hóa đơn");
 
-        jLabel33.setText("MÃ£ NhÃ¢n ViÃªn");
+        jLabel33.setText("Mã nhân viên");
 
-        jLabel34.setText("MÃ£ PhÃ²ng");
+        jLabel34.setText("Mã phòng");
 
-        jLabel35.setText("NgÃ y");
+        jLabel35.setText("Ngày");
 
-        jLabel36.setText("GiÃ¡ HÃ³a Ä�Æ¡n");
+        jLabel36.setText("Giá hóa đơn");
 
         jTextFieldMAHD.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -162,7 +162,7 @@ public class hoadonform extends javax.swing.JFrame {
         });
 
         them4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/qlksk57/Form/hinh/THEM.png"))); // NOI18N
-        them4.setText("ThÃªm");
+        them4.setText("Thêm");
         them4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 them4ActionPerformed(evt);
@@ -170,7 +170,7 @@ public class hoadonform extends javax.swing.JFrame {
         });
 
         sua4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/qlksk57/Form/hinh/SUA.png"))); // NOI18N
-        sua4.setText("Sá»­a");
+        sua4.setText("Sửa");
         sua4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sua4ActionPerformed(evt);
@@ -178,7 +178,7 @@ public class hoadonform extends javax.swing.JFrame {
         });
 
         xoa4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/qlksk57/Form/hinh/XOA.png"))); // NOI18N
-        xoa4.setText("XÃ³a");
+        xoa4.setText("Xóa");
         xoa4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 xoa4ActionPerformed(evt);
@@ -186,7 +186,7 @@ public class hoadonform extends javax.swing.JFrame {
         });
 
         thoat4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/qlksk57/Form/hinh/THOAT.png"))); // NOI18N
-        thoat4.setText("ThoÃ¡t");
+        thoat4.setText("Thoát");
         thoat4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 thoat4ActionPerformed(evt);
@@ -400,6 +400,21 @@ public class hoadonform extends javax.swing.JFrame {
             model.setValueAt(jTextFieldMAPHONGHD.getText(), jTableHOADON.getSelectedRow(), 2);
             model.setValueAt(jTextFieldNGAY.getText(), jTableHOADON.getSelectedRow(), 3);
             model.setValueAt(jTextFieldGIAHD.getText(), jTableHOADON.getSelectedRow(), 4);
+            
+            Connection con = getConnection();
+            try {
+                // Táº¡o má»™t Ä‘á»‘i tÆ°á»£ng Ä‘á»ƒ thá»±c hiá»‡n cÃ´ng viá»‡c
+                st = (Statement) con.createStatement();
+                String query = String.format("UPDATE HoaDon SET MANV ='%s', MAPHONG = '%s' , NGAY = '%s', GIAHD = %s WHERE MAHD = '%s'", jTextFieldMANVHD.getText(),
+                		jTextFieldMAPHONGHD.getText(),jTextFieldNGAY.getText(),
+						jTextFieldGIAHD.getText(), jTextFieldMAHD.getText()); 
+            	System.out.println("sql : " + query);
+                st.execute(query);
+                hienThiDanhSachHoaDon();
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
 
     }//GEN-LAST:event_sua4ActionPerformed
@@ -422,9 +437,9 @@ public class hoadonform extends javax.swing.JFrame {
 
     private void thoat4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_thoat4ActionPerformed
         // TODO add your handling code here:
-        thoat4.setToolTipText("Click Ä‘á»ƒ thoÃ¡t chÆ°Æ¡ng trÃ¬nh ");
-        int selected = JOptionPane.showConfirmDialog(this, "Báº¡n cÃ³ cháº¯c cháº¯n muá»‘n thoÃ¡t chÆ°Æ¡ng"
-            + " trÃ¬nh khÃ´ng", "ThÃ´ng bÃ¡o", JOptionPane.YES_NO_CANCEL_OPTION);
+        thoat4.setToolTipText("Click vào thoát chương trình ");
+        int selected = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn thoát chương trình"
+            + " trên không", "Thông báo", JOptionPane.YES_NO_CANCEL_OPTION);
         if (selected == JOptionPane.YES_NO_OPTION) {
             this.dispose();
 

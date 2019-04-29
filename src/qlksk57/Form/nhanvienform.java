@@ -453,6 +453,22 @@ public class nhanvienform extends javax.swing.JFrame {
             model.setValueAt(jTextFieldNGAYSINH.getText(), jTableNhanvien.getSelectedRow(), 2);
             model.setValueAt(jTextFieldGIOITINH.getText(), jTableNhanvien.getSelectedRow(), 2);
             model.setValueAt(jTextFieldCHUTHICH.getText(), jTableNhanvien.getSelectedRow(), 2);
+       
+            Connection con = getConnection();
+            try {
+                // Táº¡o má»™t Ä‘á»‘i tÆ°á»£ng Ä‘á»ƒ thá»±c hiá»‡n cÃ´ng viá»‡c
+                st = (Statement) con.createStatement();
+                String query = String.format("UPDATE NhanVien SET TENNV ='%s', CHUCVU = '%s' , LUONGNV = %s ,NGAYSINH = '%s' , GIOITINH ='%s' , CHUTHICH = '%s' WHERE MANV = '%s'", jTextFieldTENNV.getText(), 
+						jTextFieldCHUCVU.getText(), jTextFieldLUONG.getText(),jTextFieldNGAYSINH.getText(),jTextFieldGIOITINH.getText(),jTextFieldCHUTHICH.getText(),jTextFieldMANV.getText()); 
+				
+                
+                System.out.println("sql : " + query);
+                st.execute(query);
+                hienThiDanhSachNhanVien();
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }//GEN-LAST:event_suaActionPerformed
 

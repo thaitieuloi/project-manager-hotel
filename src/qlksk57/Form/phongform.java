@@ -408,6 +408,25 @@ public class phongform extends javax.swing.JFrame {
             model.setValueAt(jTextFieldTINHTRANG.getText(), jTablePHONG.getSelectedRow(), 5);
             model.setValueAt(jTextFieldMANVP.getText(), jTablePHONG.getSelectedRow(), 6);
             model.setValueAt(jTextFieldMADVP.getText(), jTablePHONG.getSelectedRow(), 7);
+        
+            Connection con = getConnection();
+            try {
+                // Táº¡o má»™t Ä‘á»‘i tÆ°á»£ng Ä‘á»ƒ thá»±c hiá»‡n cÃ´ng viá»‡c
+                st = (Statement) con.createStatement();
+               
+                String query = String.format("UPDATE Phong SET TENPHONG ='%s', LOAIPHONG = '%s' , GIAPHONG = %s ,CHUTHICH = '%s' , TINHTRANG ='%s' , MANV= '%s' , MADV= '%s' WHERE MAPHONG = '%s'", jTextFieldTENPHONG.getText(), 
+						jTextFieldLOAIPHONG.getText(), jTextFieldGIAPHONG.getText(),jTextFieldCHUTHICHP.getText(),jTextFieldTINHTRANG.getText(),jTextFieldMANVP.getText(),jTextFieldMADVP.getText(),jTextFieldMAPHONG.getText()); 
+				
+                
+                
+                System.out.println("sql : " + query);
+                st.execute(query);
+                hienThiDanhSachPhong();
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
         }
     }//GEN-LAST:event_sua3ActionPerformed
 

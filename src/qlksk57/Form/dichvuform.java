@@ -331,6 +331,22 @@ public class dichvuform extends JFrame {
 			model.setValueAt(jTextFieldMADV.getText(), jTableDichvu.getSelectedRow(), 0);
 			model.setValueAt(jTextFieldTENDV.getText().toString(), jTableDichvu.getSelectedRow(), 1);
 			model.setValueAt(jTextFieldGIADV.getText(), jTableDichvu.getSelectedRow(), 2);
+			
+			Connection con = getConnection();
+			try {
+				st = (Statement) con.createStatement();
+				String query = String.format("UPDATE DichVu SET TENDV ='%s', GIADV = %s WHERE MADV = '%s'", jTextFieldTENDV.getText(), 
+						jTextFieldGIADV.getText(), jTextFieldMADV.getText()); 
+				
+				System.out.println("sql : " + query);
+				
+				st.execute(query);
+				hienThiDanhSachDichVu();
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
 		}
 
 	}// GEN-LAST:event_sua2ActionPerformed
