@@ -9,6 +9,7 @@ public class User {
     private int id;
 	private String userName;
     private String password;
+    private int role;
    
 	/**
 	 * @return the id
@@ -52,14 +53,23 @@ public class User {
 		this.password = password;
 	}
 
-	public User(int id, String userName, String password) {
+	public User(int id, String userName, String password, int role) {
 		this.id = id;
 		this.userName = userName;
 		this.password = password;
+		this.role = role;
 	}
 
 	public User() {
     }
+
+	public int getRole() {
+		return role;
+	}
+
+	public void setRole(int role) {
+		this.role = role;
+	}
 
 	
 }

@@ -3,20 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package qlksk57;
+package qlksk57.control;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.LayoutStyle;
+import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
@@ -26,9 +29,8 @@ import qlksk57.Form.hoadonform;
 import qlksk57.Form.khachhangform;
 import qlksk57.Form.nhanvienform;
 import qlksk57.Form.phongform;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import java.awt.Font;
+import qlksk57.Form.quanlytaikhoanform;
+import qlksk57.global.managersession;
 
 /**
  *
@@ -45,6 +47,13 @@ public class MenuForm extends JFrame {
 		initComponents();
 		
 		setLocationDefault(400, 350);
+		
+		if(managersession.user != null && managersession.user.getRole() == 0) {
+			btnQunLTi.setVisible(true);
+		} else {
+			btnQunLTi.setVisible(false);
+		}
+		
 	}
 
 	/**
@@ -114,10 +123,25 @@ public class MenuForm extends JFrame {
 
 		jLabel1.setFont(new Font("Yu Gothic UI Semibold", Font.BOLD, 48)); // NOI18N
 		jLabel1.setText("HOTEL  MANAGE");
+		
+		btnQunLTi = new JButton();
+		btnQunLTi.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				jButton6ActionPerformed(evt);			}
+		});
+		
+		btnQunLTi.setText("Quản lý tài khoản");
+		btnQunLTi.setBackground(Color.WHITE);
 
 		GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
 		jPanel1Layout.setHorizontalGroup(
 			jPanel1Layout.createParallelGroup(Alignment.LEADING)
+				.addGroup(jPanel1Layout.createSequentialGroup()
+					.addGap(128)
+					.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnQunLTi, GroupLayout.PREFERRED_SIZE, 161, GroupLayout.PREFERRED_SIZE)
+						.addComponent(jButton4, GroupLayout.PREFERRED_SIZE, 161, GroupLayout.PREFERRED_SIZE))
+					.addGap(162))
 				.addGroup(jPanel1Layout.createSequentialGroup()
 					.addGap(18)
 					.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING, false)
@@ -125,34 +149,34 @@ public class MenuForm extends JFrame {
 						.addComponent(jButton1, GroupLayout.PREFERRED_SIZE, 184, GroupLayout.PREFERRED_SIZE))
 					.addGap(44)
 					.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
-						.addComponent(jButton3, GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
-						.addComponent(jButton2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addComponent(jButton3, GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+						.addComponent(jButton2, GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE))
 					.addGap(18))
 				.addGroup(jPanel1Layout.createSequentialGroup()
-					.addGap(139)
-					.addComponent(jButton4, GroupLayout.PREFERRED_SIZE, 161, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(151, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-					.addContainerGap(44, Short.MAX_VALUE)
+					.addGap(38)
 					.addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 375, GroupLayout.PREFERRED_SIZE)
-					.addGap(32))
+					.addContainerGap(38, Short.MAX_VALUE))
 		);
 		jPanel1Layout.setVerticalGroup(
 			jPanel1Layout.createParallelGroup(Alignment.LEADING)
 				.addGroup(jPanel1Layout.createSequentialGroup()
-					.addGap(19)
-					.addComponent(jLabel1)
-					.addGap(28)
-					.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING, false)
-						.addComponent(jButton3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(jButtonnhanvien))
-					.addPreferredGap(ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-					.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
-						.addComponent(jButton2)
-						.addComponent(jButton1))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGap(6)
+					.addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE)
+					.addGap(11)
+					.addGroup(jPanel1Layout.createParallelGroup(Alignment.TRAILING, false)
+						.addGroup(jPanel1Layout.createSequentialGroup()
+							.addComponent(jButtonnhanvien)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(jButton1))
+						.addGroup(jPanel1Layout.createSequentialGroup()
+							.addComponent(jButton3, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(jButton2)))
+					.addGap(11)
 					.addComponent(jButton4, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
-					.addGap(18))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(btnQunLTi, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+					.addGap(4))
 		);
 		jPanel1.setLayout(jPanel1Layout);
 
@@ -204,6 +228,17 @@ public class MenuForm extends JFrame {
 		hdf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}// GEN-LAST:event_jButton4ActionPerformed
 
+	private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton4ActionPerformed
+		// TODO add your handling code here
+		quanlytaikhoanform qltk = new quanlytaikhoanform();
+		qltk.setVisible(true);
+		qltk.pack();
+		qltk.setLocationRelativeTo(null);
+		qltk.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	}// GEN-jButton6ActionPerformed
+
+	
+	
 	private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton3ActionPerformed
 		// TODO add your handling code here:
 		dichvuform dvf = new dichvuform();
@@ -260,6 +295,7 @@ public class MenuForm extends JFrame {
 	private JButton jButtonnhanvien;
 	private JLabel jLabel1;
 	private JPanel jPanel1;
+	private JButton btnQunLTi;
 	// End of variables declaration//GEN-END:variables
 	
 	private void setLocationDefault(int w, int h) {

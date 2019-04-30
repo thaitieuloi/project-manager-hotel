@@ -13,6 +13,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -22,10 +25,12 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -38,8 +43,8 @@ import javax.swing.table.TableModel;
 
 import org.apache.commons.lang3.StringUtils;
 
-import qlksk57.control.DichVuControl;
-import qlksk57.models.DichVu;
+import qlksk57.control.UserControl;
+import qlksk57.models.User;
 
 /**
  *
@@ -47,18 +52,18 @@ import qlksk57.models.DichVu;
  */
 
 @SuppressWarnings("serial")
-public class dichvuform extends JFrame {
+public class quanlytaikhoanform extends JFrame {
 
-	DichVuControl dichVuControl = new DichVuControl();
+	UserControl userControl = new UserControl();
 	
 	/**
 	 * Creates new form dichvuform
 	 */
-	public dichvuform() {
+	public quanlytaikhoanform() {
 		setResizable(false);
 		initComponents();
 		getConnection();
-		hienThiDanhSachDichVu();
+		hienThiDanhSachUser();
 		setLocationDefault(900, 500);
 	}
 
@@ -66,9 +71,9 @@ public class dichvuform extends JFrame {
 	Statement st = null;
 
 
-	public void hienThiDanhSachDichVu() {
-		String colTieuDe1[] = new String[] { "Mã dịch vụ", "Tên dịch vụ", "Giá dịch vụ" };
-		ArrayList<DichVu> dsdv = dichVuControl.layDanhSachDichVu();
+	public void hienThiDanhSachUser() {
+		String colTieuDe1[] = new String[] { "Tên tài khoản", "Mật Khẩu", "Quyền" };
+		ArrayList<User> dsdv = userControl.layDanhSachUser();
 
 		DefaultTableModel model = new DefaultTableModel(colTieuDe1, 0);
 
@@ -78,9 +83,9 @@ public class dichvuform extends JFrame {
 
 			row = new Object[3];
 
-			row[0] = dsdv.get(i).getMaDV();
-			row[1] = dsdv.get(i).getTenNVL();
-			row[2] = dsdv.get(i).getGiaDV();
+			row[0] = dsdv.get(i).getUserName();
+			row[1] = dsdv.get(i).getPassword();
+			row[2] = dsdv.get(i).getRole() == 0 ? "Admin" : "Bình thường";
 
 			model.addRow(row);
 		}
@@ -99,6 +104,7 @@ public class dichvuform extends JFrame {
 	 */
 	// <editor-fold defaultstate="collapsed" desc="Generated
 	// Code">//GEN-BEGIN:initComponents
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void initComponents() {
 
 		jPanel7 = new JPanel();
@@ -108,9 +114,7 @@ public class dichvuform extends JFrame {
 		jLabel19 = new JLabel();
 		jLabel20 = new JLabel();
 		jLabel21 = new JLabel();
-		jTextFieldMADV = new JTextField();
-		jTextFieldTENDV = new JTextField();
-		jTextFieldGIADV = new JTextField();
+		jTextFieldUSERNAME = new JTextField();
 		them2 = new JButton();
 		sua2 = new JButton();
 		xoa2 = new JButton();
@@ -125,15 +129,15 @@ public class dichvuform extends JFrame {
 
 		jLabel18.setBackground(new java.awt.Color(0, 0, 255));
 		jLabel18.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-		jLabel18.setText("DANH SÁCH DỊCH VỤ");
+		jLabel18.setText("DANH SÁCH TÀI KHOẢN");
 
 		GroupLayout jPanel14Layout = new GroupLayout(jPanel14);
 		jPanel14Layout.setHorizontalGroup(
 			jPanel14Layout.createParallelGroup(Alignment.TRAILING)
-				.addGroup(jPanel14Layout.createSequentialGroup()
-					.addContainerGap(78, Short.MAX_VALUE)
-					.addComponent(jLabel18, GroupLayout.PREFERRED_SIZE, 241, GroupLayout.PREFERRED_SIZE)
-					.addGap(19))
+				.addGroup(Alignment.LEADING, jPanel14Layout.createSequentialGroup()
+					.addGap(28)
+					.addComponent(jLabel18, GroupLayout.PREFERRED_SIZE, 268, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(28, Short.MAX_VALUE))
 		);
 		jPanel14Layout.setVerticalGroup(
 			jPanel14Layout.createParallelGroup(Alignment.LEADING)
@@ -144,13 +148,13 @@ public class dichvuform extends JFrame {
 		);
 		jPanel14.setLayout(jPanel14Layout);
 
-		jPanel15.setBorder(BorderFactory.createTitledBorder("Thông tin dịch vụ"));
+		jPanel15.setBorder(BorderFactory.createTitledBorder("Thông tin người dùng"));
 
-		jLabel19.setText("Mã dịch vụ");
+		jLabel19.setText("Tên tài khoản");
 
-		jLabel20.setText("Tên dịch vụ");
+		jLabel20.setText("Mật khẩu");
 
-		jLabel21.setText("Giá dịch vụ");
+		jLabel21.setText("Phần quyền");
 
 		them2.setIcon(new ImageIcon(getClass().getResource("/qlksk57/Form/hinh/THEM.png"))); // NOI18N
 		them2.setText("Thêm");
@@ -191,6 +195,11 @@ public class dichvuform extends JFrame {
 				jButtonclear1ActionPerformed(evt);
 			}
 		});
+		
+		String phanquyen[] = { "Admin", "Bình thường" };
+		comboBoxROLE = new JComboBox(phanquyen);
+		
+		passwordFieldPASSWORD = new JPasswordField();
 
 		GroupLayout jPanel15Layout = new GroupLayout(jPanel15);
 		jPanel15Layout.setHorizontalGroup(
@@ -208,9 +217,9 @@ public class dichvuform extends JFrame {
 						.addGroup(jPanel15Layout.createSequentialGroup()
 							.addGap(25)
 							.addGroup(jPanel15Layout.createParallelGroup(Alignment.LEADING)
-								.addComponent(jTextFieldMADV, GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
-								.addComponent(jTextFieldTENDV)
-								.addComponent(jTextFieldGIADV, GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)))
+								.addComponent(jTextFieldUSERNAME, GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+								.addComponent(comboBoxROLE, 0, 160, Short.MAX_VALUE)
+								.addComponent(passwordFieldPASSWORD, GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)))
 						.addGroup(jPanel15Layout.createSequentialGroup()
 							.addGap(18)
 							.addGroup(jPanel15Layout.createParallelGroup(Alignment.LEADING)
@@ -227,15 +236,15 @@ public class dichvuform extends JFrame {
 					.addGap(21)
 					.addGroup(jPanel15Layout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(jLabel19)
-						.addComponent(jTextFieldMADV, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(jTextFieldUSERNAME, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addGroup(jPanel15Layout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(jLabel20)
-						.addComponent(jTextFieldTENDV, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(passwordFieldPASSWORD, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(23)
 					.addGroup(jPanel15Layout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(jLabel21)
-						.addComponent(jTextFieldGIADV, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(comboBoxROLE, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(31)
 					.addGroup(jPanel15Layout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(them2)
@@ -272,8 +281,8 @@ public class dichvuform extends JFrame {
 							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(jScrollPane3, GroupLayout.PREFERRED_SIZE, 421, GroupLayout.PREFERRED_SIZE))
 						.addGroup(jPanel7Layout.createSequentialGroup()
-							.addGap(291)
-							.addComponent(jPanel14, GroupLayout.PREFERRED_SIZE, 252, GroupLayout.PREFERRED_SIZE)))
+							.addGap(255)
+							.addComponent(jPanel14, GroupLayout.PREFERRED_SIZE, 324, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap(24, Short.MAX_VALUE))
 		);
 		jPanel7Layout.setVerticalGroup(
@@ -290,44 +299,44 @@ public class dichvuform extends JFrame {
 		jPanel7.setLayout(jPanel7Layout);
 
 		GroupLayout layout = new GroupLayout(getContentPane());
-		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(layout.createSequentialGroup().addContainerGap()
-						.addComponent(jPanel7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE)
-						.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+		layout.setHorizontalGroup(
+			layout.createParallelGroup(Alignment.LEADING)
+				.addComponent(jPanel7, GroupLayout.DEFAULT_SIZE, 854, Short.MAX_VALUE)
+		);
 		layout.setVerticalGroup(
-				layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addGroup(layout
-								.createSequentialGroup().addComponent(jPanel7, GroupLayout.PREFERRED_SIZE,
-										GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addGap(0, 14, Short.MAX_VALUE)));
+			layout.createParallelGroup(Alignment.LEADING)
+				.addComponent(jPanel7, GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
+		);
+		getContentPane().setLayout(layout);
 
 		pack();
 	}// </editor-fold>//GEN-END:initComponents
 
 
-
 	private void them2ActionPerformed(ActionEvent evt) {// GEN-FIRST:event_them2ActionPerformed
 		// Check data
-		String maDV = jTextFieldMADV.getText();
-		String maTenDV = jTextFieldTENDV.getText();
-		String giaDV = jTextFieldGIADV.getText();
+		String userName = jTextFieldUSERNAME.getText();
+		@SuppressWarnings("deprecation")
+		String password = passwordFieldPASSWORD.getText();
+		 
 
-		if (StringUtils.isEmpty(maDV) || StringUtils.isEmpty(maTenDV) || StringUtils.isEmpty(giaDV)) {
+		if (StringUtils.isEmpty(userName) || StringUtils.isEmpty(password)) {
 			JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin đầy đủ");
 			return;
 		}
 
+		int role = comboBoxROLE.getSelectedIndex();
+		password = md5(password);
 		Connection con = getConnection();
+		
 		try {
 
 			st = (Statement) con.createStatement();
-			String query = "INSERT INTO DichVu(MADV,TENDV, GIADV) VALUES('" + jTextFieldMADV.getText() + "'," + "'"
-					+ jTextFieldTENDV.getText() + "','" + jTextFieldGIADV.getText() + "')";
+			String query = "INSERT INTO users(USERNAME,PASSWORD, ROLE_ID) VALUES('" + userName + "'," + "'"
+					+ password + "', " + role + ")";
 
 			st.execute(query);
-			hienThiDanhSachDichVu();
+			hienThiDanhSachUser();
 			
 
 		} catch (Exception ex) {
@@ -337,6 +346,7 @@ public class dichvuform extends JFrame {
 		}
 	}// GEN-LAST:event_them2ActionPerformed
 
+	@SuppressWarnings("deprecation")
 	private void sua2ActionPerformed(ActionEvent evt) {// GEN-FIRST:event_sua2ActionPerformed
 		
 		if (jTableDichvu.getSelectedRow() == -1) {
@@ -347,29 +357,31 @@ public class dichvuform extends JFrame {
 			}
 		} else {
 			DefaultTableModel model = (DefaultTableModel) jTableDichvu.getModel();
-			model.setValueAt(jTextFieldMADV.getText(), jTableDichvu.getSelectedRow(), 0);
-			model.setValueAt(jTextFieldTENDV.getText().toString(), jTableDichvu.getSelectedRow(), 1);
-			model.setValueAt(jTextFieldGIADV.getText(), jTableDichvu.getSelectedRow(), 2);
+			model.setValueAt(jTextFieldUSERNAME.getText(), jTableDichvu.getSelectedRow(), 0);
+			model.setValueAt(passwordFieldPASSWORD.getText().toString(), jTableDichvu.getSelectedRow(), 1);
+//			model.setValueAt(jTextFieldGIADV.getText(), jTableDichvu.getSelectedRow(), 2);
 
 			Connection con = getConnection();
 			try {
-				String maDV = jTextFieldMADV.getText();
-				String maTenDV = jTextFieldTENDV.getText();
-				String giaDV = jTextFieldGIADV.getText();
+				String userName = jTextFieldUSERNAME.getText();
+				String password = passwordFieldPASSWORD.getText();
 
-				if (StringUtils.isEmpty(maDV) || StringUtils.isEmpty(maTenDV) || StringUtils.isEmpty(giaDV)) {
+				int role = comboBoxROLE.getSelectedIndex();
+				password = md5(password);
+
+				if (StringUtils.isEmpty(userName) || StringUtils.isEmpty(password) ) {
 					JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin đầy đủ");
 					return;
 				}
 				
 				st = (Statement) con.createStatement();
-				String query = String.format("UPDATE DichVu SET TENDV ='%s', GIADV = '%s' WHERE MADV = '%s'",
-						jTextFieldTENDV.getText(), jTextFieldGIADV.getText(), jTextFieldMADV.getText());
+				String query = String.format("UPDATE users SET USERNAME ='%s', PASSWORD = '%s', ROLE_ID = %d WHERE USERNAME = '%s'",
+						userName, password, role, userName);
 
 				System.out.println("sql : " + query);
 
 				st.execute(query);
-				hienThiDanhSachDichVu();
+				hienThiDanhSachUser();
 
 			} catch (Exception ex) {
 
@@ -384,7 +396,7 @@ public class dichvuform extends JFrame {
 
 	private void xoa2ActionPerformed(ActionEvent evt) {// GEN-FIRST:event_xoa2ActionPerformed
 
-		if(StringUtils.isEmpty(jTextFieldMADV.getText())) {
+		if(StringUtils.isEmpty(jTextFieldUSERNAME.getText())) {
 			JOptionPane.showMessageDialog(this, "Vui lòng nhập mã dịch vụ để xóa");
 			return;
 		}
@@ -392,9 +404,9 @@ public class dichvuform extends JFrame {
 		Connection con = getConnection();
 		try {
 			st = (Statement) con.createStatement();
-			String query = "DELETE FROM dichvu WHERE MADV = '" + jTextFieldMADV.getText() + "'";
+			String query = "DELETE FROM users WHERE USERNAME = '" + jTextFieldUSERNAME.getText() + "'";
 			st.executeUpdate(query);
-			hienThiDanhSachDichVu();
+			hienThiDanhSachUser();
 
 		} catch (Exception ex) {
 
@@ -418,16 +430,15 @@ public class dichvuform extends JFrame {
 
 	private void jButtonclear1ActionPerformed(ActionEvent evt) {// GEN-FIRST:event_jButtonclear1ActionPerformed
 		setEmptyAll();
-		jTextFieldMADV.requestFocus();
+		jTextFieldUSERNAME.requestFocus();
 	}// GEN-LAST:event_jButtonclear1ActionPerformed
 
 	private void jTableDichvuMouseClicked(MouseEvent evt) {// GEN-FIRST:event_jTableDichvuMouseClicked
 		int i = jTableDichvu.getSelectedRow();
 		TableModel model = jTableDichvu.getModel();
-		jTextFieldMADV.setText(model.getValueAt(i, 0).toString());
-		jTextFieldTENDV.setText(model.getValueAt(i, 1).toString());
-		jTextFieldGIADV.setText(model.getValueAt(i, 2).toString());
-
+		jTextFieldUSERNAME.setText(model.getValueAt(i, 0).toString());
+		passwordFieldPASSWORD.setText(model.getValueAt(i, 1).toString());
+		comboBoxROLE.setSelectedIndex(model.getValueAt(i, 2).toString().equals("Admin") ? 0 : 1);
 	}// GEN-LAST:event_jTableDichvuMouseClicked
 
 	/**
@@ -451,16 +462,16 @@ public class dichvuform extends JFrame {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(dichvuform.class.getName()).log(java.util.logging.Level.SEVERE, null,
+			java.util.logging.Logger.getLogger(quanlytaikhoanform.class.getName()).log(java.util.logging.Level.SEVERE, null,
 					ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(dichvuform.class.getName()).log(java.util.logging.Level.SEVERE, null,
+			java.util.logging.Logger.getLogger(quanlytaikhoanform.class.getName()).log(java.util.logging.Level.SEVERE, null,
 					ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(dichvuform.class.getName()).log(java.util.logging.Level.SEVERE, null,
+			java.util.logging.Logger.getLogger(quanlytaikhoanform.class.getName()).log(java.util.logging.Level.SEVERE, null,
 					ex);
 		} catch (UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(dichvuform.class.getName()).log(java.util.logging.Level.SEVERE, null,
+			java.util.logging.Logger.getLogger(quanlytaikhoanform.class.getName()).log(java.util.logging.Level.SEVERE, null,
 					ex);
 		}
 		// </editor-fold>
@@ -468,7 +479,7 @@ public class dichvuform extends JFrame {
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new dichvuform().setVisible(true);
+				new quanlytaikhoanform().setVisible(true);
 			}
 		});
 	}
@@ -484,13 +495,14 @@ public class dichvuform extends JFrame {
 	private JPanel jPanel7;
 	private JScrollPane jScrollPane3;
 	private JTable jTableDichvu;
-	private JTextField jTextFieldGIADV;
-	private JTextField jTextFieldMADV;
-	private JTextField jTextFieldTENDV;
+	private JTextField jTextFieldUSERNAME;
 	private JButton sua2;
 	private JButton them2;
 	private JButton thoat2;
 	private JButton xoa2;
+	private JPasswordField passwordFieldPASSWORD;
+	@SuppressWarnings("rawtypes")
+	private JComboBox comboBoxROLE;
 	// End of variables declaration//GEN-END:variables
 
 
@@ -505,8 +517,21 @@ public class dichvuform extends JFrame {
 	}
 
 	private void setEmptyAll() {
-		jTextFieldGIADV.setText("");
-		jTextFieldMADV.setText("");
-		jTextFieldTENDV.setText("");
+		jTextFieldUSERNAME.setText("");
+		passwordFieldPASSWORD.setText("");
+	}
+	
+	public static String md5(String str){
+		String result = "";
+		MessageDigest digest;
+		try {
+			digest = MessageDigest.getInstance("MD5");
+			digest.update(str.getBytes());
+			BigInteger bigInteger = new BigInteger(1,digest.digest());
+			result = bigInteger.toString(16);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 }

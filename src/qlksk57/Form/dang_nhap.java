@@ -3,12 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package qlksk57;
+package qlksk57.Form;
 
 import static qlksk57.MyConnection.getConnection;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Toolkit;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -31,9 +35,10 @@ import javax.swing.WindowConstants;
 
 import org.apache.commons.lang3.StringUtils;
 
+import qlksk57.control.MenuForm;
+import qlksk57.global.managersession;
 import qlksk57.models.User;
 import qlksk57.models.UserEnum;
-import java.awt.Font;
 
 @SuppressWarnings("serial")
 public class dang_nhap extends JFrame {
@@ -184,11 +189,13 @@ public class dang_nhap extends JFrame {
 				return;
 			}
 			
+			password = md5(Password.getText()); 
+			
 			con = getConnection();
 			try {
 				st = (Statement) con.createStatement();
 				String query = String.format("SELECT * FROM users WHERE USERNAME LIKE '%s' AND PASSWORD LIKE '%s'",
-						txtUser.getText(), Password.getText());
+						txtUser.getText(), password);
 
 				System.out.println("sql : " + query);
 				ResultSet rs = st.executeQuery(query);
@@ -196,11 +203,12 @@ public class dang_nhap extends JFrame {
 				User user;
 				while (rs.next()) {
 					user = new User(Integer.parseInt(rs.getString(UserEnum.ID.toString())),
-							rs.getString(UserEnum.UserName.getText()), rs.getString(UserEnum.Password.getText()));
+							rs.getString(UserEnum.UserName.getText()), rs.getString(UserEnum.Password.getText()), Integer.parseInt(rs.getString("ROLE_ID")));
 					listUser.add(user);
 				}
 
 				if (listUser.size() > 0) {
+					managersession.user = listUser.get(0);
 					JOptionPane.showMessageDialog(this, "Đăng đã nhập thành công");
 					MenuForm ql = new MenuForm();
 					ql.setVisible(true);
@@ -285,4 +293,20 @@ public class dang_nhap extends JFrame {
 			return true;
 		return false;
 	}
+	
+	public static String md5(String str){
+		String result = "";
+		MessageDigest digest;
+		try {
+			digest = MessageDigest.getInstance("MD5");
+			digest.update(str.getBytes());
+			BigInteger bigInteger = new BigInteger(1,digest.digest());
+			result = bigInteger.toString(16);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	
 }

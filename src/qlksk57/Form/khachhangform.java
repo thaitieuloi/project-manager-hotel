@@ -36,7 +36,6 @@ import javax.swing.table.TableModel;
 
 import qlksk57.control.KhachHangControl;
 import qlksk57.control.PhongControl;
-import qlksk57.models.DichVu;
 import qlksk57.models.KhachHang;
 import qlksk57.models.Phong;
 
@@ -107,6 +106,7 @@ public class khachhangform extends JFrame {
 	 */
 	// <editor-fold defaultstate="collapsed" desc="Generated
 	// Code">//GEN-BEGIN:initComponents
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void initComponents() {
 
 		jPanel4 = new JPanel();
@@ -545,7 +545,9 @@ public class khachhangform extends JFrame {
 	private JButton thoat1;
 	private JButton xoa1;
 	private JPanel jPanel4;
+	@SuppressWarnings("rawtypes")
 	private JComboBox comboBoxGIOITINH;
+	@SuppressWarnings("rawtypes")
 	private JComboBox comboBoxMAPHONGKH;
 
 	// End of variables declaration//GEN-END:variables
@@ -571,8 +573,9 @@ public class khachhangform extends JFrame {
 		comboBoxMAPHONGKH.setSelectedIndex(0);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void loadComboxbo() {
-		dsphong = phongControl.layDanhSachPhong();
+		dsphong = phongControl.layDanhSachEmpty();
 
 		DefaultComboBoxModel<Phong> comboBoxModelPhong = new DefaultComboBoxModel<>(
 				dsphong.toArray(new Phong[dsphong.size()]));
